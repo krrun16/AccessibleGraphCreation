@@ -1,0 +1,27 @@
+.window {
+    border: solid black 1px;
+    
+}
+
+#insertMenu {
+    display: flex;
+    flex-direction: column;
+}
+
+#treeContainer {
+    width: 200px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+#panButton {
+    width: 20px;
+    height: 20px;
+    border: solid black 1px;;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+}
