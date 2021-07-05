@@ -173,9 +173,8 @@ class View {
         render(d) {
             let s = document.getElementById("status")
             if (d.tree.head) {
-                let nodeIndex = d.current.getNodeIndex()
 
-                s.textContent = `Status: ${d.current.name}. ${nodeIndex} of ${nodeWidth} at depth ${depth}. ${numberOfChildren} children.`
+                s.textContent = `Status: ${d.current.name}. ${d.nodeIndex} of ${d.nodeMaxIndex} at depth ${d.nodeDepth} of ${d.nodeMaxDepth}. ${d.numberOfChildren} children.`
             }
             else {
                 // no head
