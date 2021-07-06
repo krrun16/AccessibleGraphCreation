@@ -44,7 +44,6 @@ class View {
     static Edit = {
         init(d) {
             let e = document.createElement("div")
-            // e.setAttribute("role", "navigation")
             e.classList.add("window")
             e.id = "edit"
 
@@ -83,7 +82,6 @@ class View {
         init(d) {
             let e = document.createElement("div")
             e.id = "move"
-            //e.setAttribute("role", "navigation")
             e.classList.add("window")
 
                 let h2 = document.createElement("h2")
@@ -163,7 +161,7 @@ class View {
 
                 let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
                 svg.id = "svg"
-                svg.setAttribute("role", "presentation")
+                svg.setAttribute("aria-hidden", "true")
 
                 // render in breadth-first search order
                 let maxDepth = 100
