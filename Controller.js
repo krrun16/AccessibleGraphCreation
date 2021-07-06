@@ -11,24 +11,58 @@ class Controller {
         document.getElementById("asHead").addEventListener("click", Controller.addNodeHead)
         document.getElementById("asLeft").addEventListener("click", Controller.addNodeLeftChild)
         document.getElementById("asRight").addEventListener("click", Controller.addNodeRightChild)
+        document.getElementById("moveUp").addEventListener("click", Controller.moveUp)
+        document.getElementById("moveDown").addEventListener("click", Controller.moveDown)
+        document.getElementById("moveLeft").addEventListener("click", Controller.moveLeft)
+        document.getElementById("moveRight").addEventListener("click", Controller.moveRight)
+    }
+
+    static moveLeft(e) {
+        Model.move("left")
+        View.render( Model.getData() )
+        e.preventDefault()
+        console.log(Model.tree)
+    }
+
+    static moveRight(e) {
+        Model.move("right")
+        View.render( Model.getData() )
+        e.preventDefault()
+        console.log(Model.tree)
+    }
+
+    static moveDown(e) {
+        Model.move("down")
+        View.render( Model.getData() )
+        e.preventDefault()
+        console.log(Model.tree)
+    }
+
+    static moveUp(e) {
+        Model.move("up")
+        View.render( Model.getData() )
+        e.preventDefault()
+        console.log(Model.tree)
     }
 
     static addNodeHead(e) {
         Model.addNodeHead()
-        View.TreeView.render( Model.getData() )
-        View.Status.render( Model.getData() )
+        View.render( Model.getData() )
+        e.preventDefault()
         console.log(Model.tree)
     }
 
     static addNodeLeftChild(e) {
         Model.addNodeLeftChild()
-        View.TreeView.render( Model.getData() )
+        View.render( Model.getData() )
+        e.preventDefault()
         console.log(Model.tree)
     }
 
     static addNodeRightChild(e) {
         Model.addNodeRightChild()
-        View.TreeView.render( Model.getData() )
+        View.render( Model.getData() )
+        e.preventDefault()
         console.log(Model.tree)
     }
 

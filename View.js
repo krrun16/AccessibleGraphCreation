@@ -3,13 +3,17 @@ class View {
     static init(d) {
         const b = document.body
         this.ModeDisplay.init(d)
-        this.Insert.init(d)
+        this.Edit.init(d)
         this.TreeView.init(d)
+        this.Move.init(d)
         this.Status.init(d)
     }
 
     static render(d) {
-
+        View.TreeView.render(d)
+        View.Status.render(d)
+        View.Edit.render(d)
+        View.Move.render(d)
     }
 
 
@@ -26,58 +30,98 @@ class View {
         },
     }
 
-    static Insert = {
+    static ListItem(action) {
+        let li = document.createElement('li')
+        let button = document.createElement('button')
+        li.id = action.id
+        button.textContent = action.textContent
+        li.style.display = action.isEnabled ? "" : "none"
+        button.href = "#"
+        li.appendChild(button)
+        return li
+    }
+
+    static Edit = {
         init(d) {
             let e = document.createElement("div")
+            // e.setAttribute("role", "navigation")
             e.classList.add("window")
-            e.id = "editContainer"
+            e.id = "edit"
 
                 let editContainerLabel = document.createElement("h2")
                 editContainerLabel.textContent = "Edit nodes"
+                editContainerLabel.id = "editContainerLabel"
             
-                let insertMenuLabel = document.createElement("h3")
-                insertMenuLabel.textContent = "Vertical insert..."
-                
                 let insertMenu = document.createElement("ol")
                 insertMenu.id = "insertMenu"
+                insertMenu.setAttribute("aria-labelledby", "editContainerLabel")
 
-                    let asHead = document.createElement("a")
-                    asHead.id = "asHead"
-                    asHead.href = "#"
-                    asHead.textContent = "as head"
-                    insertMenu.appendChild(asHead)
 
-                    let asLeft = document.createElement("a")
-                    asLeft.id = "asLeft"
-                    asLeft.href = "#"
-                    asLeft.textContent = "as left child"
-                    insertMenu.appendChild(asLeft)
-                    
+                for (let a of d.actions.edit) {
+                    insertMenu.appendChild(
+                        View.ListItem(a)
+                    )
+                }
 
-                    let asRight = document.createElement("a")
-                    asRight.id = "asRight"
-                    asRight.href = "#"
-                    asRight.textContent = "as right child"
-                    insertMenu.appendChild(asRight)
-
-                let remove = document.createElement("a")
-                remove.id = "removeNode"
-                remove.href = "#"
-                remove.textContent = "Remove node"
-
-                let rename = document.createElement("a")
-                rename.id = "renameNode"
-                rename.href = "#"
-                rename.textContent = "Rename node"
-            
                 e.appendChild(editContainerLabel)
-                e.appendChild(insertMenuLabel)
                 e.appendChild(insertMenu)
 
-                e.appendChild(remove)
-                e.appendChild(rename)
+            document.body.appendChild(e)
+        },
+
+        render(d) {
+            let e = document.getElementById("edit")
+            for (let a of d.actions.edit) {
+                let t = document.getElementById(a.id)
+                t.firstElementChild.textContent = a.textContent
+                t.style.display = a.isEnabled ? "" : "none"
+            }
+        }
+    }
+
+    static Move = {
+        init(d) {
+            let e = document.createElement("div")
+            e.id = "move"
+            //e.setAttribute("role", "navigation")
+            e.classList.add("window")
+
+                let h2 = document.createElement("h2")
+                h2.textContent = "Move cursor"
+                h2.id = "moveMenuLabel"
+                e.appendChild(h2)
+
+                // let horizontalCategory = document.createElement('h3')
+                // horizontalCategory.textContent = "Horizontally"
+                // e.appendChild(horizontalCategory)
+
+                let moveMenu = document.createElement('ol')
+                moveMenu.setAttribute("aria-labelledby", "moveMenuLabel")
+                moveMenu.id = 'moveMenu'
+
+                for (let a of d.actions.move) {
+                    moveMenu.appendChild(
+                        View.ListItem(a)
+                    )
+                }
+
+                e.appendChild(moveMenu)
+
+                // let verticalCategory = document.createElement('h3')
+                // verticalCategory.textContent = "Vertically"
+                // e.appendChild(verticalCategory)
 
             document.body.appendChild(e)
+
+        },
+
+        render(d) {
+            let insertMenu = document.getElementById("move")
+            for (let a of d.actions.move) {
+                let t = document.getElementById(a.id)
+                t.firstElementChild.textContent = a.textContent
+                t.style.display = a.isEnabled ? "" : "none"
+            }
         }
     }
 
@@ -99,16 +143,19 @@ class View {
         render(d) {
             let h = d.tree.head
             if (h === null) {
-                //document.getElementById("treeContainer").textContent = "This tree is empty."
+                document.getElementById("treeContainer").textContent = "This tree is empty."
             }
             else {
+                document.getElementById("treeContainer").textContent = ""
                 let diameter = 20
-                let margin = 50
+                let margin = 20
 
-                function getNodeCoordinates(i, d) {
+                function getNodeCoordinates(i, depth) {
+                    //let width = document.getElementById("svg").getBoundingClientRect().width
+                    let width = 200
                     let s = {}
-                    s.x = i*(diameter+margin)+diameter
-                    s.y = i*(diameter+margin)+diameter
+                    s.x = Math.round( width/2 - diameter/2 ) + (i*(diameter+margin)+diameter)
+                    s.y = depth*(diameter+margin)+diameter
                     return s
                 }
 
@@ -116,29 +163,52 @@ class View {
 
                 let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
                 svg.id = "svg"
+                svg.setAttribute("role", "presentation")
 
                 // render in breadth-first search order
-                let maxDepth = 20
-                let row = [h]
-                for (let d = 0; d<maxDepth; d++) {
+                let maxDepth = 100
+                let currentRow = [h]
+                for (let depth = 0; depth<maxDepth; depth++) {
                     let nextRow = []
-                    for (let i=0; i< row.length; i++) {
-                        let n = row[i]
-                        // add all children to the next row
-                        nextRow = nextRow.concat( row[i].children )
+                    for (let i=0; i<maxDepth && currentRow.length; i++) {
+                        let n = currentRow[i]
+                        if (n) {
+                            // add all children to the next row
+                            nextRow = nextRow.concat( n.children )
 
-                        let c = document.createElementNS("http://www.w3.org/2000/svg", "circle")
-                        c.setAttribute("class", "node")
-                        c.id = row[i].name
-                        let coord = getNodeCoordinates(i, d)
-                        c.setAttribute("cx", coord.x )
-                        c.setAttribute("cy", coord.y )
-                        c.setAttribute("r", diameter)
-                        c.setAttribute("stroke", "darkblue")
-                        c.setAttribute("fill", "lightblue")
-                        svg.appendChild(c)
+                            // draw circle
+                            let c = document.createElementNS("http://www.w3.org/2000/svg", "circle")
+                            c.setAttribute("class", "node")
+                            c.id = currentRow[i].name
+                            let coord = getNodeCoordinates(i, depth)
+                            c.setAttribute("cx", coord.x )
+                            c.setAttribute("cy", coord.y )
+                            c.setAttribute("r", diameter)
+                            c.setAttribute("stroke", "darkblue")
+                            if (n === d.current) {
+                                c.setAttribute("fill", "yellow")
+                            }
+                            else {
+                                c.setAttribute("fill", "lightblue")
+                            }
+                            svg.appendChild(c)
+
+                            // draw name
+                            let text = document.createElementNS("http://www.w3.org/2000/svg", "text")
+                            text.setAttribute("x", coord.x)
+                            text.setAttribute("y", coord.y)
+                            text.textContent = n.name
+                            svg.appendChild(text)
+
+                            // draw lines for each child
+                            for (let child of n.children) {
+                                let coord = getNodeCoordinates()
+                                let l = document.createElementNS("http://www.w3.org/2000/svg", "line")
+                                //l.setAttribute("x1", )
+                            }
+                        }
                     }
-                    row = nextRow
+                    currentRow = nextRow
                 }
                 document.getElementById("treeContainer").appendChild(svg)
             }
@@ -147,26 +217,27 @@ class View {
 
     }
 
-    static HorizontalMove = {
-        init(d) {
-            let e = document.createElement("div")
-            document.body.appendChild(e)
-        },
-
-        render(d) {
-
-        },
-    }
-
     static TreeOptions(d) {
         let e = document.createElement("div")
-
     }
 
     static Status =  {
         init(d) {
             let e = document.createElement("div")
-            e.id = "status"
+            e.id = "statusContainer"
+            e.setAttribute("aria-live", "polite")
+            e.setAttribute("role", "alert")
+            e.setAttribute("aria-labelledby", "statuslabel")
+
+            let statusLabel = document.createElement("h2")
+            statusLabel.id = "statusLabel"
+            statusLabel.textContent = "Status"
+            e.appendChild(statusLabel)
+            
+            let status = document.createElement("div")
+            status.id = "status"
+            e.appendChild(status)
+
             document.body.appendChild(e)
             this.render(d)
         },
@@ -174,11 +245,11 @@ class View {
             let s = document.getElementById("status")
             if (d.tree.head) {
 
-                s.textContent = `Status: ${d.current.name}. ${d.nodeIndex} of ${d.nodeMaxIndex} at depth ${d.nodeDepth} of ${d.nodeMaxDepth}. ${d.numberOfChildren} children.`
+                s.textContent = `${d.current.name}. ${d.nodeIndex} of ${d.nodeMaxIndex} at depth ${d.nodeDepth} of ${d.nodeMaxDepth}. ${d.numberOfChildren} children.`
             }
             else {
                 // no head
-                s.textContent = "No node selected."
+                s.textContent = "Tree is empty."
             }
 
         },
