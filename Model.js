@@ -56,10 +56,10 @@ class Model {
                 new Action("renameNode", `rename ${this.current?.name}`, !!this.current)
             ],
             move: [
-                new Action("moveLeft", `move left of ${this.current?.name}`, this.canMoveLeft() ),
-                new Action("moveRight", `move right of ${this.current?.name}`, this.canMoveRight() ),
                 new Action("moveUp", `move to parent of ${this.current?.name}`, this.canMoveUp() ),
                 new Action("moveDown", `move to first child of ${this.current?.name}`, this.canMoveDown() ),
+                new Action("moveLeft", `move left of ${this.current?.name}`, this.canMoveLeft() ),
+                new Action("moveRight", `move right of ${this.current?.name}`, this.canMoveRight() ),
             ]
         }
     }

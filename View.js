@@ -243,7 +243,7 @@ class View {
             let s = document.getElementById("status")
             if (d.tree.head) {
 
-                s.textContent = `${d.current.name}. ${d.nodeIndex} of ${d.nodeMaxIndex} at depth ${d.nodeDepth} of ${d.nodeMaxDepth}. ${d.numberOfChildren} children.`
+                s.textContent = `${d.current.name}. Sibling ${d.nodeIndex+1} of ${d.nodeMaxIndex} at depth ${d.nodeDepth} of ${d.nodeMaxDepth}. ${d.numberOfChildren} children.`
             }
             else {
                 // no head

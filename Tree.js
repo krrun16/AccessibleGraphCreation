@@ -48,7 +48,7 @@ class Tree {
             return this.getChildren(n).length
         }
         else {
-            return "N/A"
+            return 0
         }
     }
 
@@ -124,7 +124,7 @@ class Tree {
         }
     }
 
-    // get the total number of nodes in this node's row
+    // get the total number of non-undefined nodes in this node's row
     getMaxNodeIndex(n) {
         // check if this is the head
         if (this.head === n) {
@@ -132,14 +132,7 @@ class Tree {
         }
         else {
             // get the parent
-            let p = this.getParent(n)
-            if (p) {
-                return p.children.length
-            }
-            // no parent
-            else {
-                throw new Error("Non-head node has no parent")
-            }
+            return this.numberOfSiblings(n)
         }
     }
 
@@ -149,41 +142,41 @@ class Tree {
     }
 
     getDepthHelper(examining, target) {
-    // base case: this node is undefined
-        if (!examining) {
-            return null
-        }
         // base case: this is the node we are searching for
         if (examining === target) {
-            return 1
+            return 0
         }
-        // recursive case: examining each child
-        for (let c of examining.children) {
-            let p = this.getDepthHelper(c, target)
-            if (p) {
-                return 1+p
+        else {
+            // recursive case: this node is not our target, so examine each child to see if it is our target node
+            let children = this.getChildren(examining)
+            for (let c of children) {
+                let depth = this.getDepthHelper(c, target)
+                if (depth !== -1) {
+                    return 1+depth
+                }
             }
+            // did not find the child among these siblings, so return -1
+            return -1
+        }
+    }
+    
+    getTreeDepth() {
+        let d = 0
+        if (this.head === null) {
+            return d
+        }
+        else {
+            return this.getTreeDepthHelper(d, this.head)
         }
     }
     
     getTreeDepthHelper(d, n) {
         let childDepths = []
-        for (let c of n.children) {
-            if ( c !== undefined ) {
-                childDepths.push( this.getTreeDepthHelper(d+1, c) )
-            }
+        let children = this.getChildren(n)
+        for (let c of children) {
+            childDepths.push( this.getTreeDepthHelper(d+1, c) )
         }
         return Math.max(childDepths)
-    }
-
-    getTreeDepth() {
-        let d = 0
-        if (this.head === null) {
-            return 0
-        }
-        else {
-            return this.getTreeDepthHelper(d, this.head)
-        }
     }
 
     addNode(parent, name, position) {
