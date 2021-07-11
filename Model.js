@@ -25,7 +25,7 @@ class Model {
     }
 
     static canMoveRight() {
-        return !!this.current && this.tree.getNodeIndex(this.current) < this.tree.getMaxNodeIndex(this.current)
+        return !!this.current && this.tree.getNodeIndex(this.current) < this.tree.numberOfSiblings(this.current)-1
     }
 
     static canMoveUp() {

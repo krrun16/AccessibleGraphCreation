@@ -31,25 +31,59 @@ class Tree {
         }
     }
 
-    numberOfChildren(n) {
+    // get non-undefined children of node n
+    getChildren(n) {
         if (n) {
-            return n.children.length
+            return n.children.filter(
+                child => Boolean( child )
+            )
         }
         else {
             return "N/A"
         }
     }
 
-    getSibling(n, d) {
+    numberOfChildren(n) {
+        if (n && n.children.length) {
+            return this.getChildren(n).length
+        }
+        else {
+            return "N/A"
+        }
+    }
+
+    getSibling(n, direction) {
         // get parent
         let p = this.getParent(n)
         if (p) {
-            let i = this.getNodeIndex(n)
-            return p[i+d]
+            let s = this.siblings(n)
+            let i = s.indexOf(n)
+            if ( i+direction < s.length && i+direction >= 0 ) {
+                return s[i+direction]
+            }
+            else {
+                throw new Error("Tried to get sibling out of bounds")
+            }
         }
         else {
             throw new Error("Node has no siblings")
         }
+    }
+
+    siblings(n) {
+        let p = this.getParent(n)
+        if (p && p.children.length) {
+            return p.children.filter(
+                child => child
+            )
+        }
+        else {
+            return []
+        }
+    }
+
+    numberOfSiblings(n) {
+        return this.siblings(n).length
     }
 
     getLeftSibling(n) {
@@ -75,21 +109,18 @@ class Tree {
 
     // get the horizontal position of this node
     getNodeIndex(n) {
-        let p = this.getParent(n)
-        if (p) {
-            // get the index
-            for (let i=0; i<p.children.length; i++) {
-                if ( p.children[i] === n ) {
-                    return i+1
-                }
-            }
-        }
-        else if ( n === this.head ) {
+        if ( n === this.head ) {
             // this is the head
-            return 1
+            return 0
         }
         else {
-            throw new Error("Could not get node index")
+            let s = this.siblings(n)
+            if (s.length) {
+                return s.indexOf(n)
+            }
+            else {
+                throw new Error("Could not get node index")
+            }
         }
     }
 

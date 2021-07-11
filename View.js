@@ -225,7 +225,7 @@ class View {
             e.id = "statusContainer"
             e.setAttribute("aria-live", "polite")
             e.setAttribute("role", "alert")
-            e.setAttribute("aria-labelledby", "statuslabel")
+            e.setAttribute("aria-labelledby", "statusLabel")
 
             let statusLabel = document.createElement("h2")
             statusLabel.id = "statusLabel"
