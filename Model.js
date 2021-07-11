@@ -29,7 +29,7 @@ class Model {
     }
 
     static canMoveUp() {
-        return !!(this.current === this.head)
+        return !(this.current === this.tree.head)
     }
 
     static canMoveDown() {
