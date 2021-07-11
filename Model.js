@@ -34,9 +34,19 @@ class Model {
     }
 
     static canMoveDown() {
-        if (this.current) {
-            return !!this.tree.getFirstChild(this.current)
-        }
+        return this.current && !!this.tree.getFirstChild(this.current)
+    }
+
+    static canAddLeftChild() {
+        return this.canAddChild(0)
+    }
+
+    static canAddRightChild() {
+        return this.canAddChild(1)
+    }
+
+    static canAddChild(index) {
+        return Boolean( this.current && !this.current.children[index] )
     }
 
     static getSummary() {
@@ -69,8 +79,8 @@ class Model {
         return {
             edit: [
                 new Action("asHead", "Add Head of Tree", !!!this.tree.head),
-                new Action("asLeft", `Add Left Child of ${this.current?.name}`, !!this.current),
-                new Action("asRight", `Add Right Child ${this.current?.name}`, !!this.current),
+                new Action("asLeft", `Add Left Child of ${this.current?.name}`, this.canAddLeftChild()),
+                new Action("asRight", `Add Right Child ${this.current?.name}`, this.canAddRightChild()),
                 new Action("removeNode", `Remove ${this.current?.name}`, !!this.current),
                 new Action("renameNode", `Rename ${this.current?.name}`, !!this.current)
             ],
