@@ -8,6 +8,41 @@ class Tree {
 
     static MAX_DEPTH = 100
 
+    // return all nodes in depth-first search order
+    getNodes(parent) {
+        if (!parent) {
+            if (this.head) {
+                return this.getNodes(this.head)
+            }
+            else {
+                return []
+            }
+        }
+        else {
+            let nodes = [parent]
+            for ( let c of this.getChildren(parent) ) {
+                nodes = nodes.concat( this.getNodes(c) )
+            }
+            return nodes
+        }
+    }
+
+    numberOfNodes() {
+        return this.getNodes().length
+    }
+
+    numberOfLeafNodes() {
+        return this.getNodes().filter(
+            node => this.getChildren(node).length === 0
+        ).length
+    }
+
+    numberOfNonLeafNodes() {
+        return this.getNodes().filter(
+            node => this.getChildren(node).length
+        ).length
+    }
+
     getParent(n) {
         // depth-first search
         return this.getParentHelper(this.head, n, null)
@@ -39,7 +74,7 @@ class Tree {
             )
         }
         else {
-            return "N/A"
+            return []
         }
     }
 
@@ -179,7 +214,6 @@ class Tree {
             for (let c of children) {
                 childDepths.push( this.getTreeDepthHelper(d, c)+1 )
             }
-            console.log(n.name, childDepths)
             return Math.max(...childDepths)
         }
 

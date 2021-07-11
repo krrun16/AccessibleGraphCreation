@@ -5,12 +5,14 @@ class View {
         this.ModeDisplay.init(d)
         this.Edit.init(d)
         this.TreeView.init(d)
+        this.Summary.init(d)
         this.Move.init(d)
         this.Status.init(d)
     }
 
     static render(d) {
         View.TreeView.render(d)
+        View.Summary.render(d)
         View.Status.render(d)
         View.Edit.render(d)
         View.Move.render(d)
@@ -30,7 +32,7 @@ class View {
         },
     }
 
-    static ListItem(action) {
+    static ButtonItem(action) {
         let li = document.createElement('li')
         let button = document.createElement('button')
         li.id = action.id
@@ -39,6 +41,15 @@ class View {
         button.href = "#"
         li.appendChild(button)
         return li
+    }
+
+    static DescriptionListItem(item) {
+        let dt = document.createElement('dt')
+        dt.textContent = item.name
+        let dd = document.createElement('dd')
+        dd.id = item.id
+        dd.textContent = item.value
+        return [dt, dd]
     }
 
     static Edit = {
@@ -58,7 +69,7 @@ class View {
 
                 for (let a of d.actions.edit) {
                     insertMenu.appendChild(
-                        View.ListItem(a)
+                        View.ButtonItem(a)
                     )
                 }
 
@@ -99,7 +110,7 @@ class View {
 
                 for (let a of d.actions.move) {
                     moveMenu.appendChild(
-                        View.ListItem(a)
+                        View.ButtonItem(a)
                     )
                 }
 
@@ -219,6 +230,40 @@ class View {
         let e = document.createElement("div")
     }
 
+    static Summary = {
+        init(d) {
+            let e = document.createElement('div')
+            e.id = "summaryContainer"
+            e.setAttribute("aria-labelledby", "summaryLabel")
+            e.className = "window"
+
+                let summaryLabel = document.createElement("h2")
+                summaryLabel.id = "summaryLabel"
+                summaryLabel.textContent = "Summary"
+                e.appendChild(summaryLabel)
+
+                let summary = document.createElement('dl')
+                summary.id = "summary"
+                e.appendChild(summary)
+
+            document.body.appendChild(e)
+            
+            for (let item of d.summary) {
+                let descriptionListItem =  View.DescriptionListItem(item)
+                for (let element of descriptionListItem) {
+                    summary.appendChild(element)
+                }
+            }
+
+            this.render(d)
+        },
+        render(d) {
+            for (let item of d.summary) {
+                document.getElementById(item.id).textContent = item.value
+            }
+        }
+    }
+
     static Status =  {
         init(d) {
             let e = document.createElement("div")
@@ -227,14 +272,14 @@ class View {
             e.setAttribute("role", "alert")
             e.setAttribute("aria-labelledby", "statusLabel")
 
-            let statusLabel = document.createElement("h2")
-            statusLabel.id = "statusLabel"
-            statusLabel.textContent = "Status"
-            e.appendChild(statusLabel)
-            
-            let status = document.createElement("div")
-            status.id = "status"
-            e.appendChild(status)
+                let statusLabel = document.createElement("h2")
+                statusLabel.id = "statusLabel"
+                statusLabel.textContent = "Status"
+                e.appendChild(statusLabel)
+                
+                let status = document.createElement("div")
+                status.id = "status"
+                e.appendChild(status)
 
             document.body.appendChild(e)
             this.render(d)
@@ -249,7 +294,6 @@ class View {
                 // no head
                 s.textContent = "Tree is empty."
             }
-
         },
     }
 

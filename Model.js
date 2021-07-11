@@ -11,6 +11,7 @@ class Model {
         d.nodeMaxDepth = this.tree.getTreeDepth()
         d.numberOfChildren = this.tree.numberOfChildren(this.current)
         d.actions = this.getActions()
+        d.summary = this.getSummary()
         return d
     }
 
@@ -36,6 +37,24 @@ class Model {
         if (this.current) {
             return !!this.tree.getFirstChild(this.current)
         }
+    }
+
+    static getSummary() {
+        class SummaryItem {
+            constructor(id, name, value) {
+                this.id = id
+                this.name = name
+                this.value = value
+            }
+        }
+
+        return [
+            new SummaryItem("numberOfNodes", "Number of nodes", this.tree.numberOfNodes()),
+            new SummaryItem("arity", "Arity", this.tree.maximumChildren),
+            new SummaryItem("numberOfLeafNodes", "Number of leaf nodes", this.tree.numberOfLeafNodes() ),
+            new SummaryItem("numberOfNonLeafNodes", "Number of non-leaf nodes", this.tree.numberOfNonLeafNodes() ),
+            new SummaryItem("treeDepth", "Tree depth", this.tree.getTreeDepth() ),
+        ]
     }
 
     static getActions() {

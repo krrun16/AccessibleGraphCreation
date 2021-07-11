@@ -36,3 +36,16 @@
 .window li {
     list-style: none;
 }
+
+dt {
+    font-weight: bold;
+    float: left;
+    clear: left;
+    width: 200px;
+    text-align: right;
+}
+
+dt::after {
+    content: ": ";
+    white-space: pre;
+}
