@@ -53,7 +53,7 @@ class Tree {
                 node => this.getChildren(node).includes(n)
             )
             if (result.length === 1) {
-                return result[1]
+                return result[0]
             }
             else {
                 throw new Error("Non-head node has no parent")

@@ -49,11 +49,11 @@ class Model {
         }
 
         return [
-            new SummaryItem("numberOfNodes", "Number of nodes", this.tree.numberOfNodes()),
+            new SummaryItem("numberOfNodes", "Number of Nodes", this.tree.numberOfNodes()),
             new SummaryItem("arity", "Arity", this.tree.maximumChildren),
-            new SummaryItem("numberOfLeafNodes", "Number of leaf nodes", this.tree.numberOfLeafNodes() ),
-            new SummaryItem("numberOfNonLeafNodes", "Number of non-leaf nodes", this.tree.numberOfNonLeafNodes() ),
-            new SummaryItem("treeDepth", "Tree depth", this.tree.getTreeDepth() ),
+            new SummaryItem("numberOfLeafNodes", "Number of Leaf Nodes", this.tree.numberOfLeafNodes() ),
+            new SummaryItem("numberOfNonLeafNodes", "Number of Non-Leaf Nodes", this.tree.numberOfNonLeafNodes() ),
+            new SummaryItem("treeDepth", "Tree Depth", this.tree.getTreeDepth() ),
         ]
     }
 
@@ -68,17 +68,17 @@ class Model {
 
         return {
             edit: [
-                new Action("asHead", "add head of tree", !!!this.tree.head),
-                new Action("asLeft", `add left child of ${this.current?.name}`, !!this.current),
-                new Action("asRight", `add right child ${this.current?.name}`, !!this.current),
-                new Action("removeNode", `remove ${this.current?.name}`, !!this.current),
-                new Action("renameNode", `rename ${this.current?.name}`, !!this.current)
+                new Action("asHead", "Add Head of Tree", !!!this.tree.head),
+                new Action("asLeft", `Add Left Child of ${this.current?.name}`, !!this.current),
+                new Action("asRight", `Add Right Child ${this.current?.name}`, !!this.current),
+                new Action("removeNode", `Remove ${this.current?.name}`, !!this.current),
+                new Action("renameNode", `Rename ${this.current?.name}`, !!this.current)
             ],
             move: [
-                new Action("moveUp", `move to parent of ${this.current?.name}`, this.canMoveUp() ),
-                new Action("moveDown", `move to first child of ${this.current?.name}`, this.canMoveDown() ),
-                new Action("moveLeft", `move left of ${this.current?.name}`, this.canMoveLeft() ),
-                new Action("moveRight", `move right of ${this.current?.name}`, this.canMoveRight() ),
+                new Action("moveUp", `Move to Parent of ${this.current?.name}`, this.canMoveUp() ),
+                new Action("moveDown", `Move to First Child of ${this.current?.name}`, this.canMoveDown() ),
+                new Action("moveLeft", `Move Left of ${this.current?.name}`, this.canMoveLeft() ),
+                new Action("moveRight", `Move Right of ${this.current?.name}`, this.canMoveRight() ),
             ]
         }
     }

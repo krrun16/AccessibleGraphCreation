@@ -8,6 +8,7 @@ class View {
         this.Summary.init(d)
         this.Move.init(d)
         this.Status.init(d)
+        this.File.init(d)
     }
 
     static render(d) {
@@ -21,10 +22,21 @@ class View {
 
     static ModeDisplay = {
         init(d) {
-            let e = document.createElement("h1")
-            e.id = "modeDisplay"
-            e.textContent = `Mode: ${d.mode}`
-            document.body.appendChild(e)
+            let e = document.createElement("div")
+            e.id = "modeDisplayContainer"
+
+                let h2 = document.createElement("h2")
+                h2.textContent = "Mode"
+                e.appendChild(h2)
+
+                let div = document.createElement("div")
+                div.id = "mode"
+                div.textContent = `${d.mode[0].toUpperCase() + d.mode.slice(1)}`
+                e.appendChild(div)
+
+                document.body.appendChild(e)
+
+                this.render(d)
         },
 
         render(d) {
@@ -59,7 +71,7 @@ class View {
             e.id = "edit"
 
                 let editContainerLabel = document.createElement("h2")
-                editContainerLabel.textContent = "Edit nodes"
+                editContainerLabel.textContent = "Edit Nodes"
                 editContainerLabel.id = "editContainerLabel"
             
                 let insertMenu = document.createElement("ol")
@@ -96,7 +108,7 @@ class View {
             e.classList.add("window")
 
                 let h2 = document.createElement("h2")
-                h2.textContent = "Move cursor"
+                h2.textContent = "Move Cursor"
                 h2.id = "moveMenuLabel"
                 e.appendChild(h2)
 
@@ -284,6 +296,7 @@ class View {
             document.body.appendChild(e)
             this.render(d)
         },
+
         render(d) {
             let s = document.getElementById("status")
             if (d.tree.head) {
@@ -295,6 +308,36 @@ class View {
                 s.textContent = "Tree is empty."
             }
         },
+    }
+
+    static File = {
+
+        init(d) {
+            let e = document.createElement("div")
+            e.id = "file"
+            e.className = "window"
+
+                let h2 = document.createElement("h2")
+                h2.textContent = 'File'
+                e.appendChild(h2)
+
+                let save = document.createElement("button")
+                save.id = "save"
+                save.textContent = "Save Tree to File..."
+                e.appendChild(save)
+
+                let load = document.createElement("button")
+                load.id = "load"
+                load.textContent = "Load Tree from File..."
+                e.appendChild(load)
+
+            document.body.appendChild(e)
+        },
+
+        render(d) {
+
+        }
+
     }
 
 }

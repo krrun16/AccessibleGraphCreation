@@ -66,6 +66,14 @@ class Controller {
         console.log(Model.tree)
     }
 
+    static save(e) {
+
+    }
+
+    static load(e) {
+        
+    }
+
 }
 
 window.addEventListener("load", Controller.init)
