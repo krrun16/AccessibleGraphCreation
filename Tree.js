@@ -44,24 +44,19 @@ class Tree {
     }
 
     getParent(n) {
-        // depth-first search
-        return this.getParentHelper(this.head, n, null)
-    }
-    
-    getParentHelper(examining, target, parent) {
-        // base case: this node is undefined
-        if (!examining) {
+        if (n === this.head) {
             return null
         }
-        // base case: this is the node we are searching for
-        if (examining === target) {
-            return parent
-        }
-        // recursive case: examining each child
-        for (let c of examining.children) {
-            let p = this.getParentHelper(c, target, examining)
-            if (p) {
-                return p
+        else {
+            let nodes = this.getNodes()
+            let result = nodes.filter(
+                node => this.getChildren(node).includes(n)
+            )
+            if (result.length === 1) {
+                return result[1]
+            }
+            else {
+                throw new Error("Non-head node has no parent")
             }
         }
     }
