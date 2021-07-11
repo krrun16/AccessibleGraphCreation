@@ -162,7 +162,7 @@ class Tree {
     
     getTreeDepth() {
         let d = 0
-        if (this.head === null) {
+        if (!this.head) {
             return d
         }
         else {
@@ -171,25 +171,41 @@ class Tree {
     }
     
     getTreeDepthHelper(d, n) {
-        let childDepths = []
         let children = this.getChildren(n)
-        for (let c of children) {
-            childDepths.push( this.getTreeDepthHelper(d+1, c) )
+        
+        if ( children.length ) {
+            // recursive case: this node has children, so get the depth recursively for each
+            let childDepths = []
+            for (let c of children) {
+                childDepths.push( this.getTreeDepthHelper(d, c)+1 )
+            }
+            console.log(n.name, childDepths)
+            return Math.max(...childDepths)
         }
-        return Math.max(childDepths)
+
+        else {
+            // base case: this node has no children, so return a depth of 0
+            return 0
+        }
     }
 
     addNode(parent, name, position) {
-        let n
-        if (this.head === null) {
-            n = new TreeNode(name)
-            this.head = n
+        // check if there is already a node at this position
+        if ( parent && parent.children[position] ) {
+            throw new Error("Cannot add new node in a non-empty position")
         }
         else {
-            n = new TreeNode(name)
-            parent.children[position] = n
+            let n
+            if (this.head === null) {
+                n = new TreeNode(name)
+                this.head = n
+            }
+            else {
+                n = new TreeNode(name)
+                parent.children[position] = n
+            }
+            return n
         }
-        return n
     }
 
 }
