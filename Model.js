@@ -139,4 +139,12 @@ class Model {
         this.addNodeNthChild(1)
     }
 
+    static export() {
+        return JSON.stringify( this.getData() )
+    }
+
+    static import(json) {
+        console.log("Loading: ", json)
+    }
+
 }

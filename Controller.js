@@ -15,6 +15,9 @@ class Controller {
         document.getElementById("moveDown").addEventListener("click", Controller.moveDown)
         document.getElementById("moveLeft").addEventListener("click", Controller.moveLeft)
         document.getElementById("moveRight").addEventListener("click", Controller.moveRight)
+        document.getElementById("save").addEventListener('click', Controller.save)
+        document.getElementById("loadDummy").addEventListener('click', Controller.load)
+        document.getElementById("load").addEventListener('change', Controller.upload)
     }
 
     static moveLeft(e) {
@@ -67,11 +70,26 @@ class Controller {
     }
 
     static save(e) {
-        
+        let data = "data:text/json;charset=utf-8," + encodeURIComponent( Model.export() )
+        let a = document.createElement("a")
+        a.setAttribute("href", data)
+        a.setAttribute("download", `Tree (${new Date()}).json`)
+        a.click()
     }
 
     static load(e) {
+        document.getElementById("load").click()
+    }
 
+    static upload(e) {
+        const reader = new FileReader()
+        reader.onload = Controller.readFile
+        reader.readAsText( e.target.files[0] )
+    }
+
+    static readFile(e) {
+        Model.import( JSON.parse(e.target.result) )
+        View.render( Model.getData() )
     }
 
 }

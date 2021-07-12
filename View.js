@@ -326,9 +326,15 @@ class View {
                 save.textContent = "Save Tree to File..."
                 e.appendChild(save)
 
-                let load = document.createElement("button")
+                let loadDummy = document.createElement("button")
+                loadDummy.id = "loadDummy"
+                loadDummy.textContent = "Load Tree from File..."
+                e.appendChild(loadDummy)
+                
+                let load = document.createElement("input")
+                load.type = "file"
                 load.id = "load"
-                load.textContent = "Load Tree from File..."
+                load.style.display = "none"
                 e.appendChild(load)
 
             document.body.appendChild(e)
