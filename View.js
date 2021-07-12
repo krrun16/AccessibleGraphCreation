@@ -168,21 +168,31 @@ class View {
             }
             else {
 
-                function getNodeCoordinates(i, depth) {
-                    //let width = document.getElementById("svg").getBoundingClientRect().width
-                    let width = 200
+                function getNodeCoordinates(node) {
+                    let depth = d.tree.getDepth(node)
+                    let i = d.tree.getNodeIndex(node)
+
+                    let width = 400
                     let s = {}
-                    s.x = Math.round( width/2 - diameter/2 ) + (i*(diameter+margin)+diameter)
+                    let maximumChildren = 2
+                    // the cutoff for whether a node is on the left or right of the center line
+                    let cutoff = (maximumChildren-1) / 2
+                    // which side of the center line a node is one. 1 is right, -1 is left
+                    let newI = i - cutoff
+                    // the center line for the svg canvas
+                    let xCenter = width/2 - diameter/2
+
+                    s.x = Math.round(
+                        xCenter + newI*depth*1.5*(diameter+margin)
+                    )
                     s.y = depth*(diameter+margin)+diameter
+
                     return s
                 }
 
                 function drawCircle(node, svg) {
-                    // get node coordinates in the tree
-                    let depth = d.tree.getDepth(node)
-                    let i = d.tree.getNodeIndex(node)
                     // compute pixel coordinates
-                    let coord = getNodeCoordinates(i, depth)
+                    let coord = getNodeCoordinates(node)
                     // draw circle
                     let c = document.createElementNS("http://www.w3.org/2000/svg", "circle")
                     c.setAttribute("class", "node")
@@ -201,13 +211,8 @@ class View {
                 }
 
                 function drawName(node, svg) {
-                    // get node coordinates in the tree
-                    let depth = d.tree.getDepth(node)
-                    let i = d.tree.getNodeIndex(node)
-                    
                     // compute pixel coordinates
-                    let coord = getNodeCoordinates(i, depth)
-                    
+                    let coord = getNodeCoordinates(node)
 
                     // draw name of this node
                     let text = document.createElementNS("http://www.w3.org/2000/svg", "text")
@@ -219,17 +224,13 @@ class View {
                 }
 
                 function drawLine(node, svg) {
-                    // get node coordinates in the tree
-                    let depth = d.tree.getDepth(node)
-                    let i = d.tree.getNodeIndex(node)
-                    
                     // compute pixel coordinates
-                    let coord = getNodeCoordinates(i, depth)
+                    let coord = getNodeCoordinates(node)
                     
                     // draw lines to each child
                     let children = d.tree.getChildren(node)
                     for (let child of children) {
-                        let childCoord = getNodeCoordinates(d.tree.getNodeIndex(child), d.tree.getDepth(child) )
+                        let childCoord = getNodeCoordinates( child )
                         let l = document.createElementNS("http://www.w3.org/2000/svg", "line")
                         l.setAttribute( "x1", coord.x )
                         l.setAttribute( "y1", coord.y )
