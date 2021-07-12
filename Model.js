@@ -149,10 +149,15 @@ class Model {
     }
 
     static import(json) {
-        console.log("Loading: ", json)
-        // load the new tree
-        this.tree = json.tree
-        this.interface = json.interface
-    }
+        // rebuild the tree
+        let jsonTree = json.tree
+        let newTree = new Tree
+        // add the head
+        newTree.addNode(null, jsonTree.head.name, 0)
+        
+
+        // load interface settings
+        
+    }    
 
 }
