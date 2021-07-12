@@ -169,7 +169,7 @@ class View {
             else {
                 document.getElementById("treeContainer").textContent = ""
                 let diameter = 20
-                let margin = 20
+                let margin = 50
 
                 function getNodeCoordinates(i, depth) {
                     //let width = document.getElementById("svg").getBoundingClientRect().width
@@ -180,6 +180,52 @@ class View {
                     return s
                 }
 
+                function drawNode(node, svg) {
+                    
+                    // get node coordinates in the tree
+                    let depth = d.tree.getDepth(node)
+                    let i = d.tree.getNodeIndex(node)
+                    
+                    // compute pixel coordinates
+                    let coord = getNodeCoordinates(i, depth)
+                    
+                    // draw circle
+                    let c = document.createElementNS("http://www.w3.org/2000/svg", "circle")
+                    c.setAttribute("class", "node")
+                    c.id = node.name
+                    c.setAttribute("cx", coord.x )
+                    c.setAttribute("cy", coord.y )
+                    c.setAttribute("r", diameter)
+                    c.setAttribute("stroke", "darkblue")
+                    if (node === d.current) {
+                        c.setAttribute("fill", "yellow")
+                    }
+                    else {
+                        c.setAttribute("fill", "lightblue")
+                    }
+                    svg.appendChild(c)
+
+                    // draw name of this node
+                    let text = document.createElementNS("http://www.w3.org/2000/svg", "text")
+                    text.setAttribute("x", coord.x)
+                    text.setAttribute("y", coord.y)
+                    text.textContent = node.name
+                    svg.appendChild(text)
+
+                    // draw lines to each child
+                    let children = d.tree.getChildren(node)
+                    for (let child of children) {
+                        let childCoord = getNodeCoordinates(d.tree.getNodeIndex(child), d.tree.getDepth(child) )
+                        let l = document.createElementNS("http://www.w3.org/2000/svg", "line")
+                        l.setAttribute( "x1", coord.x )
+                        l.setAttribute( "y1", coord.y )
+                        l.setAttribute( "x2", childCoord.x )
+                        l.setAttribute( "y2", childCoord.y )
+                        l.setAttribute( "stroke", "black" )
+                        svg.appendChild(l)
+                    }
+                }
+
                 document.getElementById("svg")?.remove()
 
                 let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
@@ -187,51 +233,17 @@ class View {
                 svg.setAttribute("aria-hidden", "true")
 
                 // render in breadth-first search order
-                let maxDepth = 100
-                let currentRow = [h]
-                for (let depth = 0; depth<maxDepth; depth++) {
-                    let nextRow = []
-                    for (let i=0; i<maxDepth && currentRow.length; i++) {
-                        let n = currentRow[i]
-                        if (n) {
-                            // add all children to the next row
-                            nextRow = nextRow.concat( n.children )
 
-                            // draw circle
-                            let c = document.createElementNS("http://www.w3.org/2000/svg", "circle")
-                            c.setAttribute("class", "node")
-                            c.id = currentRow[i].name
-                            let coord = getNodeCoordinates(i, depth)
-                            c.setAttribute("cx", coord.x )
-                            c.setAttribute("cy", coord.y )
-                            c.setAttribute("r", diameter)
-                            c.setAttribute("stroke", "darkblue")
-                            if (n === d.current) {
-                                c.setAttribute("fill", "yellow")
-                            }
-                            else {
-                                c.setAttribute("fill", "lightblue")
-                            }
-                            svg.appendChild(c)
+                // render in depth-first search order because why not :) (actually it's because I really don't want to rewrite this whole breadth-first algorithm and I already have a working depth-first one, can you tell how much I love life? PS I hope you're having fun looking at my code LOL s/o from Joseph 2021-07-11)
 
-                            // draw name
-                            let text = document.createElementNS("http://www.w3.org/2000/svg", "text")
-                            text.setAttribute("x", coord.x)
-                            text.setAttribute("y", coord.y)
-                            text.textContent = n.name
-                            svg.appendChild(text)
+                let nodes = d.tree.getNodes()
 
-                            // draw lines for each child
-                            for (let child of n.children) {
-                                let coord = getNodeCoordinates()
-                                let l = document.createElementNS("http://www.w3.org/2000/svg", "line")
-                                //l.setAttribute("x1", )
-                            }
-                        }
-                    }
-                    currentRow = nextRow
+                for (let n of nodes) {
+                    drawNode(n, svg)
                 }
+
                 document.getElementById("treeContainer").appendChild(svg)
+
             }
 
         },
