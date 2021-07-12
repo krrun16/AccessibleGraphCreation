@@ -167,9 +167,6 @@ class View {
                 document.getElementById("treeContainer").textContent = "This tree is empty."
             }
             else {
-                document.getElementById("treeContainer").textContent = ""
-                let diameter = 20
-                let margin = 50
 
                 function getNodeCoordinates(i, depth) {
                     //let width = document.getElementById("svg").getBoundingClientRect().width
@@ -180,15 +177,12 @@ class View {
                     return s
                 }
 
-                function drawNode(node, svg) {
-                    
+                function drawCircle(node, svg) {
                     // get node coordinates in the tree
                     let depth = d.tree.getDepth(node)
                     let i = d.tree.getNodeIndex(node)
-                    
                     // compute pixel coordinates
                     let coord = getNodeCoordinates(i, depth)
-                    
                     // draw circle
                     let c = document.createElementNS("http://www.w3.org/2000/svg", "circle")
                     c.setAttribute("class", "node")
@@ -204,6 +198,16 @@ class View {
                         c.setAttribute("fill", "lightblue")
                     }
                     svg.appendChild(c)
+                }
+
+                function drawName(node, svg) {
+                    // get node coordinates in the tree
+                    let depth = d.tree.getDepth(node)
+                    let i = d.tree.getNodeIndex(node)
+                    
+                    // compute pixel coordinates
+                    let coord = getNodeCoordinates(i, depth)
+                    
 
                     // draw name of this node
                     let text = document.createElementNS("http://www.w3.org/2000/svg", "text")
@@ -212,6 +216,16 @@ class View {
                     text.textContent = node.name
                     svg.appendChild(text)
 
+                }
+
+                function drawLine(node, svg) {
+                    // get node coordinates in the tree
+                    let depth = d.tree.getDepth(node)
+                    let i = d.tree.getNodeIndex(node)
+                    
+                    // compute pixel coordinates
+                    let coord = getNodeCoordinates(i, depth)
+                    
                     // draw lines to each child
                     let children = d.tree.getChildren(node)
                     for (let child of children) {
@@ -226,21 +240,34 @@ class View {
                     }
                 }
 
+                // clear the "This tree is empty." placeholder
+                document.getElementById("treeContainer").textContent = ""
+                // set constants
+                let diameter = 20
+                let margin = 50
+
+                // remove any previously-rendered tree
                 document.getElementById("svg")?.remove()
 
+                // create a new svg element to hold all the circles, lines, and text
                 let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
                 svg.id = "svg"
+                // hide the image from screenreaders as the rest of our document contains the same information and is more accessible
                 svg.setAttribute("aria-hidden", "true")
-
-                // render in breadth-first search order
 
                 // render in depth-first search order because why not :) (actually it's because I really don't want to rewrite this whole breadth-first algorithm and I already have a working depth-first one, can you tell how much I love life? PS I hope you're having fun looking at my code LOL s/o from Joseph 2021-07-11)
 
                 let nodes = d.tree.getNodes()
 
-                for (let n of nodes) {
-                    drawNode(n, svg)
-                }
+                nodes.map(
+                    n => drawLine(n, svg)
+                )
+                nodes.map(
+                    n => drawCircle(n, svg)
+                )
+                nodes.map(
+                    n => drawName(n, svg)
+                )
 
                 document.getElementById("treeContainer").appendChild(svg)
 
