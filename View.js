@@ -31,7 +31,7 @@ class View {
 
                 let div = document.createElement("div")
                 div.id = "mode"
-                div.textContent = `${d.mode[0].toUpperCase() + d.mode.slice(1)}`
+                div.textContent = `${d.interface.mode[0].toUpperCase() + d.interface.mode.slice(1)}`
                 e.appendChild(div)
 
                 document.body.appendChild(e)
@@ -79,7 +79,7 @@ class View {
                 insertMenu.setAttribute("aria-labelledby", "editContainerLabel")
 
 
-                for (let a of d.actions.edit) {
+                for (let a of d.view.actions.edit) {
                     insertMenu.appendChild(
                         View.ButtonItem(a)
                     )
@@ -93,7 +93,7 @@ class View {
 
         render(d) {
             let e = document.getElementById("edit")
-            for (let a of d.actions.edit) {
+            for (let a of d.view.actions.edit) {
                 let t = document.getElementById(a.id)
                 t.firstElementChild.textContent = a.textContent
                 t.style.display = a.isEnabled ? "" : "none"
@@ -120,7 +120,7 @@ class View {
                 moveMenu.setAttribute("aria-labelledby", "moveMenuLabel")
                 moveMenu.id = 'moveMenu'
 
-                for (let a of d.actions.move) {
+                for (let a of d.view.actions.move) {
                     moveMenu.appendChild(
                         View.ButtonItem(a)
                     )
@@ -138,7 +138,7 @@ class View {
 
         render(d) {
             let insertMenu = document.getElementById("move")
-            for (let a of d.actions.move) {
+            for (let a of d.view.actions.move) {
                 let t = document.getElementById(a.id)
                 t.firstElementChild.textContent = a.textContent
                 t.style.display = a.isEnabled ? "" : "none"
@@ -201,7 +201,7 @@ class View {
                     c.setAttribute("cy", coord.y )
                     c.setAttribute("r", diameter)
                     c.setAttribute("stroke", "darkblue")
-                    if (node === d.current) {
+                    if (node === d.interface.current) {
                         c.setAttribute("fill", "yellow")
                     }
                     else {
@@ -300,7 +300,7 @@ class View {
 
             document.body.appendChild(e)
             
-            for (let item of d.summary) {
+            for (let item of d.view.summary) {
                 let descriptionListItem =  View.DescriptionListItem(item)
                 for (let element of descriptionListItem) {
                     summary.appendChild(element)
@@ -310,7 +310,7 @@ class View {
             this.render(d)
         },
         render(d) {
-            for (let item of d.summary) {
+            for (let item of d.view.summary) {
                 document.getElementById(item.id).textContent = item.value
             }
         }
@@ -341,7 +341,7 @@ class View {
             let s = document.getElementById("status")
             if (d.tree.head) {
 
-                s.textContent = `${d.current.name}. Sibling ${d.nodeIndex+1} of ${d.nodeMaxIndex} at depth ${d.nodeDepth+1} of ${d.nodeMaxDepth+1}. ${d.numberOfChildren} children.`
+                s.textContent = `${d.interface.current.name}. Sibling ${d.view.nodeIndex+1} of ${d.view.nodeMaxIndex} at depth ${d.view.nodeDepth+1} of ${d.view.nodeMaxDepth+1}. ${d.view.numberOfChildren} children.`
             }
             else {
                 // no head

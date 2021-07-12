@@ -1,40 +1,49 @@
 class Model {
 
     static getData() {
-        let d = {}
-        d.tree = this.tree
-        d.mode = this.mode
-        d.current = this.current
-        d.nodeIndex = this.tree.getNodeIndex(this.current)
-        d.nodeMaxIndex = this.tree.getMaxNodeIndex(this.current)
-        d.nodeDepth = this.tree.getDepth(this.current)
-        d.nodeMaxDepth = this.tree.getTreeDepth()
-        d.numberOfChildren = this.tree.numberOfChildren(this.current)
-        d.actions = this.getActions()
-        d.summary = this.getSummary()
-        return d
+        return {
+            tree: this.tree,
+            interface: this.interface,
+            view: {
+                nodeIndex: this.tree.getNodeIndex(this.interface.current),
+                nodeMaxIndex: this.tree.getMaxNodeIndex(this.interface.current),
+                nodeDepth: this.tree.getDepth(this.interface.current),
+                nodeMaxDepth: this.tree.getTreeDepth(),
+                numberOfChildren: this.tree.numberOfChildren(this.interface.current),
+                actions: this.getActions(),
+                summary: this.getSummary(),
+            },
+        }
     }
 
     static tree = new Tree()
-    static mode = "tree"
-    static current = null
+
+    static interface = {
+        mode: "tree",
+        current: null,
+        nextNameIndex: 0,
+    }
+
     static nodeNames = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
-    static nextNameIndex = 0
+    
+    static getNextName() {
+        return this.nodeNames[this.interface.nextNameIndex++]
+    }
 
     static canMoveLeft() {
-        return !!this.current && this.tree.getNodeIndex(this.current) > 0
+        return !!this.interface.current && this.tree.getNodeIndex(this.interface.current) > 0
     }
 
     static canMoveRight() {
-        return !!this.current && this.tree.getNodeIndex(this.current) < this.tree.numberOfSiblings(this.current)-1
+        return !!this.interface.current && this.tree.getNodeIndex(this.interface.current) < this.tree.numberOfSiblings(this.interface.current)-1
     }
 
     static canMoveUp() {
-        return !(this.current === this.tree.head)
+        return !(this.interface.current === this.tree.head)
     }
 
     static canMoveDown() {
-        return this.current && !!this.tree.getFirstChild(this.current)
+        return this.interface.current && !!this.tree.getFirstChild(this.interface.current)
     }
 
     static canAddLeftChild() {
@@ -46,7 +55,7 @@ class Model {
     }
 
     static canAddChild(index) {
-        return Boolean( this.current && !this.current.children[index] )
+        return Boolean( this.interface.current && !this.interface.current.children[index] )
     }
 
     static getSummary() {
@@ -79,16 +88,16 @@ class Model {
         return {
             edit: [
                 new Action("asHead", "Add Head of Tree", !!!this.tree.head),
-                new Action("asLeft", `Add Left Child of ${this.current?.name}`, this.canAddLeftChild()),
-                new Action("asRight", `Add Right Child ${this.current?.name}`, this.canAddRightChild()),
-                new Action("removeNode", `Remove ${this.current?.name}`, !!this.current),
-                new Action("renameNode", `Rename ${this.current?.name}`, !!this.current)
+                new Action("asLeft", `Add Left Child of ${this.interface.current?.name}`, this.canAddLeftChild()),
+                new Action("asRight", `Add Right Child ${this.interface.current?.name}`, this.canAddRightChild()),
+                new Action("removeNode", `Remove ${this.interface.current?.name}`, !!this.interface.current),
+                new Action("renameNode", `Rename ${this.interface.current?.name}`, !!this.interface.current)
             ],
             move: [
-                new Action("moveUp", `Move to Parent of ${this.current?.name}`, this.canMoveUp() ),
-                new Action("moveDown", `Move to First Child of ${this.current?.name}`, this.canMoveDown() ),
-                new Action("moveLeft", `Move Left of ${this.current?.name}`, this.canMoveLeft() ),
-                new Action("moveRight", `Move Right of ${this.current?.name}`, this.canMoveRight() ),
+                new Action("moveUp", `Move to Parent of ${this.interface.current?.name}`, this.canMoveUp() ),
+                new Action("moveDown", `Move to First Child of ${this.interface.current?.name}`, this.canMoveDown() ),
+                new Action("moveLeft", `Move Left of ${this.interface.current?.name}`, this.canMoveLeft() ),
+                new Action("moveRight", `Move Right of ${this.interface.current?.name}`, this.canMoveRight() ),
             ]
         }
     }
@@ -96,22 +105,22 @@ class Model {
     static move(d) {
         if (d === "up") {
             if ( this.canMoveUp() ) {
-                this.current = this.tree.getParent(this.current)
+                this.interface.current = this.tree.getParent(this.interface.current)
             }
         }
         else if (d === "down") {
             if ( this.canMoveDown() ) {
-                this.current = this.tree.getFirstChild(this.current)
+                this.interface.current = this.tree.getFirstChild(this.interface.current)
             }
         }
         else if (d === "left") {
             if ( this.canMoveLeft() ) {
-                this.current = this.tree.getLeftSibling(this.current)
+                this.interface.current = this.tree.getLeftSibling(this.interface.current)
             }
         }
         else if ( d === "right" ) {
             if ( this.canMoveRight() ) {
-                this.current = this.tree.getRightSibling(this.current)
+                this.interface.current = this.tree.getRightSibling(this.interface.current)
             }
         }
         else {
@@ -119,16 +128,12 @@ class Model {
         }
     }
     
-    static getNextName() {
-        return this.nodeNames[this.nextNameIndex++]
-    }
-    
     static addNodeHead() {
-        this.current = this.tree.addNode(null, this.getNextName(), 0) 
+        this.interface.current = this.tree.addNode(null, this.getNextName(), 0) 
     }
     
     static addNodeNthChild(n) {
-        this.tree.addNode(this.current, this.getNextName(), n)
+        this.tree.addNode(this.interface.current, this.getNextName(), n)
     }
     
     static addNodeLeftChild() {
@@ -145,6 +150,9 @@ class Model {
 
     static import(json) {
         console.log("Loading: ", json)
+        // load the new tree
+        this.tree = json.tree
+        this.interface = json.interface
     }
 
 }
