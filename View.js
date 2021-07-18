@@ -55,13 +55,16 @@ class View {
         return li
     }
 
-    static DescriptionListItem(item) {
-        let dt = document.createElement('dt')
-        dt.textContent = item.name
-        let dd = document.createElement('dd')
-        dd.id = item.id
-        dd.textContent = item.value
-        return [dt, dd]
+    static TableRow(item) {
+        let tr = document.createElement('tr')
+            let th = document.createElement('th')
+            th.textContent = item.name
+            let td = document.createElement('td')
+            td.id = item.id
+            td.textContent = item.value
+        tr.appendChild(th)
+        tr.appendChild(td)
+        return tr
     }
 
     static Edit = {
@@ -330,17 +333,15 @@ class View {
                 summaryLabel.textContent = "Summary"
                 e.appendChild(summaryLabel)
 
-                let summary = document.createElement('dl')
+                let summary = document.createElement('table')
                 summary.id = "summary"
                 e.appendChild(summary)
 
             document.body.appendChild(e)
             
             for (let item of d.view.summary) {
-                let descriptionListItem =  View.DescriptionListItem(item)
-                for (let element of descriptionListItem) {
-                    summary.appendChild(element)
-                }
+                let tr = View.TableRow(item)
+                summary.appendChild(tr)
             }
 
             this.render(d)
