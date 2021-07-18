@@ -24,49 +24,42 @@ class Controller {
         Model.move("left")
         View.render( Model.getData() )
         e.preventDefault()
-        console.log(Model.tree)
     }
 
     static moveRight(e) {
         Model.move("right")
         View.render( Model.getData() )
         e.preventDefault()
-        console.log(Model.tree)
     }
 
     static moveDown(e) {
         Model.move("down")
         View.render( Model.getData() )
         e.preventDefault()
-        console.log(Model.tree)
     }
 
     static moveUp(e) {
         Model.move("up")
         View.render( Model.getData() )
         e.preventDefault()
-        console.log(Model.tree)
     }
 
     static addNodeHead(e) {
         Model.addNodeHead()
         View.render( Model.getData() )
         e.preventDefault()
-        console.log(Model.tree)
     }
 
     static addNodeLeftChild(e) {
         Model.addNodeLeftChild()
         View.render( Model.getData() )
         e.preventDefault()
-        console.log(Model.tree)
     }
 
     static addNodeRightChild(e) {
         Model.addNodeRightChild()
         View.render( Model.getData() )
         e.preventDefault()
-        console.log(Model.tree)
     }
 
     static save(e) {

@@ -155,7 +155,6 @@ class Model {
         // add the head
         newTree.addNode(null, jsonTree.head.name, 0)
         
-
         // load interface settings
         
     }    

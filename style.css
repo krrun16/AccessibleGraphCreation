@@ -1,7 +1,65 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-size: 14pt;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+}
+
 .window {
     border: solid black 1px;
     display: flex;
     flex-direction: column;
+    padding: 20px;
+}
+
+#modeDisplayContainer {
+    flex-basis: 100%;
+    order: 0;
+}
+
+#edit {
+    order: 1;
+    flex-basis: 25%;
+    border-right: none;
+}
+
+#treeContainer {
+    height: 500px;
+    order: 2;
+    flex-basis: 50%;
+    border-right: none;
+}
+
+#move {
+    order: 3;
+    flex-basis: 25%;
+}
+
+#statusContainer {
+    order: 5;
+    flex-basis: 33.33%;
+    border-top: none;
+    border-right: none;
+}
+
+#summaryContainer {
+    order: 4;
+    flex-basis: 33.33%;
+    border-top: none;
+    border-right: none;
+}
+
+#file {
+    border-top: none;
+    flex-basis: 33.33%;
+    order: 6;
 }
 
 #insertMenu {
@@ -10,18 +68,18 @@
 }
 
 #treeContainer {
-    width: 500px;
-    height: 500px;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
     overflow: scroll;
+    background: white;
+    color: black;
 }
 
 #svg {
-    width: 100%;
-    height: 100%;
+    width: 1000px;
+    height: 1000px;
 }
 
 #panButton {

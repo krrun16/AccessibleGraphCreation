@@ -162,32 +162,71 @@ class View {
         },
 
         render(d) {
-            let h = d.tree.head
+
+            // set constants
+            const diameter = 20
+            // minimum margin
+            const margin = 100
+            
+            const h = d.tree.head
+
             if (h === null) {
                 document.getElementById("treeContainer").textContent = "This tree is empty."
             }
             else {
 
+                // this function has a super duper inefficient upper bound on running time lolol
                 function getNodeCoordinates(node) {
-                    let depth = d.tree.getDepth(node)
-                    let i = d.tree.getNodeIndex(node)
+                    const depth = d.tree.getDepth(node)
+                    const i = d.tree.getNodeIndexIncludeBlanks(node)
 
-                    let width = 400
+                    const width = 1000
+                    // miimum spread
                     let s = {}
-                    let maximumChildren = 2
-                    // the cutoff for whether a node is on the left or right of the center line
-                    let cutoff = (maximumChildren-1) / 2
-                    // which side of the center line a node is one. 1 is right, -1 is left
-                    let newI = i - cutoff
-                    // the center line for the svg canvas
-                    let xCenter = width/2 - diameter/2
+                    const maximumChildren = 2
 
-                    s.x = Math.round(
-                        xCenter + newI*depth*1.5*(diameter+margin)
-                    )
-                    s.y = depth*(diameter+margin)+diameter
-
-                    return s
+                    // base case: this is the head
+                    if (depth === 0) {
+                        s.x = Math.round(
+                            width/2
+                        )
+                        s.y = Math.round(
+                            0 + diameter
+                        )
+                        return s
+                    }
+                    // recursive case: not the head
+                    else {
+                        // calculate position from the parent's coordinates
+                        const p = getNodeCoordinates( d.tree.getParent(node) )
+                        const maxDepth = d.tree.getTreeDepth()
+                        const depth = d.tree.getDepth(node)
+                        const depthMult = maxDepth - depth + 1
+                        const spread = margin * (maximumChildren-1) * depthMult
+                        const step = spread/(maximumChildren-1)
+                        // console.log("depthMult: ", depthMult)
+                        // console.log("depth: ", depth)
+                        // console.log("spread: ", spread)
+                        // console.log("p: ", p)
+                        // console.log("i: ", i)
+                        // console.log("step: ", step)
+                        // console.log("diameter: ", diameter)
+                        s.x = Math.round(
+                            p.x + i*step - spread/2
+                        )
+                        s.y = Math.round(
+                            depth*(diameter+margin)+diameter/2
+                        )
+                        let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect")
+                        rect.setAttribute("x", p.x + 0*step - spread/2)
+                        rect.setAttribute("y", depth*(diameter+margin)+diameter/2)
+                        rect.setAttribute("width", spread)
+                        rect.setAttribute("height", (depth+1)*(diameter)+diameter/2)
+                        rect.setAttribute("stroke", "orange")
+                        rect.setAttribute("fill", "none")
+                        svg.appendChild(rect)
+                        return s
+                    }
                 }
 
                 function drawCircle(node, svg) {
@@ -243,9 +282,6 @@ class View {
 
                 // clear the "This tree is empty." placeholder
                 document.getElementById("treeContainer").textContent = ""
-                // set constants
-                let diameter = 20
-                let margin = 50
 
                 // remove any previously-rendered tree
                 document.getElementById("svg")?.remove()
@@ -258,7 +294,7 @@ class View {
 
                 // render in depth-first search order because why not :) (actually it's because I really don't want to rewrite this whole breadth-first algorithm and I already have a working depth-first one, can you tell how much I love life? PS I hope you're having fun looking at my code LOL s/o from Joseph 2021-07-11)
 
-                let nodes = d.tree.getNodes()
+                const nodes = d.tree.getNodes()
 
                 nodes.map(
                     n => drawLine(n, svg)
@@ -320,6 +356,7 @@ class View {
         init(d) {
             let e = document.createElement("div")
             e.id = "statusContainer"
+            e.className = "window"
             e.setAttribute("aria-live", "polite")
             e.setAttribute("role", "alert")
             e.setAttribute("aria-labelledby", "statusLabel")
