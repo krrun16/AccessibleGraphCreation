@@ -27,6 +27,12 @@ class Tree {
         }
     }
 
+    getNodeByName(name) {
+        return this.getNodes(this.head).find(
+            node => node.name === name
+        )
+    }
+
     numberOfNodes() {
         return this.getNodes().length
     }

@@ -149,15 +149,38 @@ class Model {
     }
 
     static import(json) {
-        // rebuild the tree
-        let jsonTree = json.tree
-        let newTree = new Tree
-        // add the head
-        newTree.addNode(null, jsonTree.head.name, 0)
-        
+
+        function buildTree(jsonHead, jsonParent, treeParent) {
+            if (!jsonParent && !treeParent) {
+                // this is a new tree, add the head
+                Model.tree.head = Model.tree.addNode(null, jsonHead.name, 0)
+                // recurse
+                buildTree(jsonHead, jsonHead, Model.tree.head)
+            }
+            else {
+                for ( let jsonChild of jsonParent.children ) {
+                    const treeChild = Model.tree.addNode(
+                        treeParent,
+                        jsonChild.name,
+                        jsonParent.children.indexOf(jsonChild)
+                    )
+                    buildTree(jsonHead, jsonChild, treeChild)
+                }
+            }
+        }
+            
         // load interface settings
+        this.interface.mode = json.interface.mode
+        this.interface.nextNameIndex = json.interface.nextNameIndex
+
+        // delete the current tree
+        delete this.tree
+        // rebuild the tree
+        this.tree = new Tree()
+        buildTree(json.tree.head, null, null)       
         
-        
+        // set the cursor
+        this.interface.current = this.tree.getNodeByName(json.interface.current.name)
     }
 
 

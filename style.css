@@ -158,16 +158,16 @@ textarea:focus {
 
 #statusContainer {
     order: 5;
-    flex-basis: calc(33.33% - 2px);
+    flex-basis: calc(33.33% - 1px);
 }
 
 #summaryContainer {
     order: 4;
-    flex-basis: calc(33.33% - 2px);
+    flex-basis: calc(33.33% - 1px);
 }
 
 #file {
-    flex-basis: calc(33.33% - 2px);
+    flex-basis: calc(33.33% - 1px);
     order: 6;
 }
 

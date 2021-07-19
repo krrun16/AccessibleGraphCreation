@@ -335,7 +335,6 @@ class View {
                 )
 
                 const viewBox = `${x} ${y} ${width} ${height}`
-                console.log(viewBox)
 
                 svg.setAttribute("viewBox", viewBox)                
             }
