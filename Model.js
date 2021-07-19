@@ -168,20 +168,26 @@ class Model {
                 }
             }
         }
+
+        // check if there is a tree in this file
+        if ( json.tree.head ) {
+            // load interface settings
+            this.interface.mode = json.interface.mode
+            this.interface.nextNameIndex = json.interface.nextNameIndex
+    
+            // delete the current tree
+            delete this.tree
+            // rebuild the tree
+            this.tree = new Tree()
+            buildTree(json.tree.head, null, null)       
             
-        // load interface settings
-        this.interface.mode = json.interface.mode
-        this.interface.nextNameIndex = json.interface.nextNameIndex
-
-        // delete the current tree
-        delete this.tree
-        // rebuild the tree
-        this.tree = new Tree()
-        buildTree(json.tree.head, null, null)       
+            // set the cursor
+            this.interface.current = this.tree.getNodeByName(json.interface.current.name)
+        }
+        else {
+            window.alert("This file cannot be loaded because its tree is missing a head.")
+        }
         
-        // set the cursor
-        this.interface.current = this.tree.getNodeByName(json.interface.current.name)
     }
-
 
 }
