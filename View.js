@@ -19,6 +19,19 @@ class View {
         View.Move.render(d)
     }
 
+    static getTitle(d) {
+        const numberOfChildren = d.view.summary.find( item => item.id === "numberOfNodes").value
+        return `A computer science tree with ${numberOfChildren} nodes and arity ${d.view.numberOfChildren}.`
+    }
+
+    static getDesc(d) {
+        const numberOfNodes = d.view.summary.find( item => item.id === "numberOfNodes").value
+        const arity = d.view.summary.find( item => item.id === "arity").value
+        const numberOfLeafNodes = d.view.summary.find( item => item.id === "numberOfLeafNodes").value
+        const numberOfNonLeafNodes = d.view.summary.find( item => item.id === "numberOfNonLeafNodes").value
+        const treeDepth = d.view.summary.find( item => item.id === "treeDepth").value
+        return `A computer science tree with arity ${arity} and depth ${treeDepth}. There are ${numberOfNodes} nodes, ${numberOfLeafNodes} of which are leaf nodes and ${numberOfNonLeafNodes} of which are non-leaf nodes.`
+    }
 
     static ModeDisplay = {
         init(d) {
@@ -295,6 +308,15 @@ class View {
                 // hide the image from screenreaders as the rest of our document contains the same information and is more accessible
                 svg.setAttribute("aria-hidden", "true")
 
+                // set alt text attributes
+                let title = document.createElementNS("http://www.w3.org/2000/svg", "title")
+                title.textContent = View.getTitle(d)
+                svg.appendChild(title)
+
+                let desc = document.createElementNS("http://www.w3.org/2000/svg", "desc")
+                desc.textContent = View.getDesc(d)
+                svg.appendChild(desc)
+
                 // render in depth-first search order because why not :) (actually it's because I really don't want to rewrite this whole breadth-first algorithm and I already have a working depth-first one, can you tell how much I love life? PS I hope you're having fun looking at my code LOL s/o from Joseph 2021-07-11)
 
                 const nodes = d.tree.getNodes()
@@ -415,11 +437,22 @@ class View {
                 load.style.display = "none"
                 e.appendChild(load)
 
+                let h3 = document.createElement("h3")
+                h3.textContent = "Exported image alt text"
+                e.appendChild(h3)
+
+                let alt = document.createElement("textarea")
+                alt.id = "altText"
+                alt.rows = 6
+                alt.addEventListener('click', (e) => e.target.select() )
+                e.appendChild(alt)
+
             document.body.appendChild(e)
+            this.render(d)
         },
 
         render(d) {
-
+            document.getElementById("altText").textContent = View.getDesc(d)
         }
 
     }
