@@ -2,7 +2,6 @@ class View {
 
     static init(d) {
         const b = document.body
-        this.ModeDisplay.init(d)
         this.Edit.init(d)
         this.TreeView.init(d)
         this.Summary.init(d)
@@ -45,30 +44,6 @@ class View {
         const escaped = serializer.serializeToString(svg)
         const prefix = "data:image/svg+xml;charset=utf-8,"
         return prefix + encodeURIComponent(escaped)
-    }
-
-    static ModeDisplay = {
-        init(d) {
-            let e = document.createElement("div")
-            e.id = "modeDisplayContainer"
-
-                let h1 = document.createElement("h1")
-                h1.textContent = "Mode"
-                e.appendChild(h1)
-
-                let div = document.createElement("div")
-                div.id = "mode"
-                div.textContent = `${d.interface.mode[0].toUpperCase() + d.interface.mode.slice(1)}`
-                e.appendChild(div)
-
-                document.body.appendChild(e)
-
-                this.render(d)
-        },
-
-        render(d) {
-
-        },
     }
 
     static ButtonItem(action) {

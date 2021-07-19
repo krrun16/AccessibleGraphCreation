@@ -19,7 +19,6 @@ class Model {
     static tree = new Tree()
 
     static interface = {
-        mode: "tree",
         current: null,
         nextNameIndex: 0,
     }
@@ -172,7 +171,6 @@ class Model {
         // check if there is a tree in this file
         if ( json.tree.head ) {
             // load interface settings
-            this.interface.mode = json.interface.mode
             this.interface.nextNameIndex = json.interface.nextNameIndex
     
             // delete the current tree
