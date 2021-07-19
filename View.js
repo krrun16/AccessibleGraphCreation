@@ -52,9 +52,9 @@ class View {
             let e = document.createElement("div")
             e.id = "modeDisplayContainer"
 
-                let h2 = document.createElement("h2")
-                h2.textContent = "Mode"
-                e.appendChild(h2)
+                let h1 = document.createElement("h1")
+                h1.textContent = "Mode"
+                e.appendChild(h1)
 
                 let div = document.createElement("div")
                 div.id = "mode"
@@ -100,7 +100,7 @@ class View {
             e.classList.add("window")
             e.id = "edit"
 
-                let editContainerLabel = document.createElement("h2")
+                let editContainerLabel = document.createElement("h1")
                 editContainerLabel.textContent = "Edit Nodes"
                 editContainerLabel.id = "editContainerLabel"
             
@@ -137,12 +137,12 @@ class View {
             e.id = "move"
             e.classList.add("window")
 
-                let h2 = document.createElement("h2")
-                h2.textContent = "Move Cursor"
-                h2.id = "moveMenuLabel"
-                e.appendChild(h2)
+                let h1 = document.createElement("h1")
+                h1.textContent = "Move Cursor"
+                h1.id = "moveMenuLabel"
+                e.appendChild(h1)
 
-                // let horizontalCategory = document.createElement('h3')
+                // let horizontalCategory = document.createElement('h2')
                 // horizontalCategory.textContent = "Horizontally"
                 // e.appendChild(horizontalCategory)
 
@@ -158,7 +158,7 @@ class View {
 
                 e.appendChild(moveMenu)
 
-                // let verticalCategory = document.createElement('h3')
+                // let verticalCategory = document.createElement('h2')
                 // verticalCategory.textContent = "Vertically"
                 // e.appendChild(verticalCategory)
 
@@ -395,7 +395,7 @@ class View {
             e.setAttribute("aria-labelledby", "summaryLabel")
             e.className = "window"
 
-                let summaryLabel = document.createElement("h2")
+                let summaryLabel = document.createElement("h1")
                 summaryLabel.id = "summaryLabel"
                 summaryLabel.textContent = "Summary"
                 e.appendChild(summaryLabel)
@@ -429,7 +429,7 @@ class View {
             e.setAttribute("role", "alert")
             e.setAttribute("aria-labelledby", "statusLabel")
 
-                let statusLabel = document.createElement("h2")
+                let statusLabel = document.createElement("h1")
                 statusLabel.id = "statusLabel"
                 statusLabel.textContent = "Status"
                 e.appendChild(statusLabel)
@@ -462,9 +462,9 @@ class View {
             e.id = "file"
             e.className = "window"
 
-                let h2 = document.createElement("h2")
-                h2.textContent = 'File'
-                e.appendChild(h2)
+                let h1 = document.createElement("h1")
+                h1.textContent = 'File'
+                e.appendChild(h1)
 
                 let save = document.createElement("button")
                 save.id = "save"
@@ -482,9 +482,9 @@ class View {
                 load.style.display = "none"
                 e.appendChild(load)
 
-                let h3export = document.createElement('h3')
-                h3export.textContent = "Export Image"
-                e.appendChild(h3export)
+                let h2export = document.createElement('h2')
+                h2export.textContent = "Export Image"
+                e.appendChild(h2export)
 
                 let exportSvg = document.createElement("button")
                 exportSvg.id = "exportSvg"
@@ -496,9 +496,9 @@ class View {
                 exportPng.textContent = "Export Tree as PNG"
                 e.appendChild(exportPng)
 
-                let h3 = document.createElement("h3")
-                h3.textContent = "Exported image alt text"
-                e.appendChild(h3)
+                let h2 = document.createElement("h2")
+                h2.textContent = "Exported image alt text"
+                e.appendChild(h2)
 
                 let alt = document.createElement("textarea")
                 alt.id = "altText"
