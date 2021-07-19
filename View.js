@@ -21,8 +21,7 @@ class View {
     }
 
     static getTitle(d) {
-        const numberOfChildren = d.view.summary.find( item => item.id === "numberOfNodes").value
-        return `A computer science tree with ${numberOfChildren} nodes and arity ${d.view.numberOfChildren}.`
+        return `Computer science tree`
     }
 
     static getDesc(d) {
@@ -31,7 +30,13 @@ class View {
         const numberOfLeafNodes = d.view.summary.find( item => item.id === "numberOfLeafNodes").value
         const numberOfNonLeafNodes = d.view.summary.find( item => item.id === "numberOfNonLeafNodes").value
         const treeDepth = d.view.summary.find( item => item.id === "treeDepth").value
-        return `A computer science tree with arity ${arity} and depth ${treeDepth}. There are ${numberOfNodes} nodes, ${numberOfLeafNodes} of which are leaf nodes and ${numberOfNonLeafNodes} of which are non-leaf nodes.`
+
+        if (numberOfNodes === 0) {
+            return `An empty computer science tree data structure represented as a hierarchical diagram with circles for nodes and lines for edges.`
+        }
+        else {
+            return `A computer science tree data structure represented as a hierarchical diagram with circles for nodes and lines for edges. The tree has arity ${arity} and depth ${treeDepth}. There are ${numberOfNodes} nodes, ${numberOfLeafNodes} of which are leaf nodes and ${numberOfNonLeafNodes} of which are non-leaf nodes.`
+        }
     }
 
     static exportSvg(d) {
@@ -184,6 +189,8 @@ class View {
                 let imgContainer = document.createElement("div")
 
             document.body.appendChild(e)
+
+            this.render(d)
         },
 
         render(d) {
@@ -195,164 +202,183 @@ class View {
             
             const h = d.tree.head
 
-            if (h === null) {
-                document.getElementById("treeContainer").textContent = "This tree is empty."
-            }
-            else {
+            // this function has a super duper inefficient upper bound on running time lolol
+            function getNodeCoordinates(node) {
+                const depth = d.tree.getDepth(node)
+                const i = d.tree.getNodeIndexIncludeBlanks(node)
 
-                // this function has a super duper inefficient upper bound on running time lolol
-                function getNodeCoordinates(node) {
+                const width = 500
+                // miimum spread
+                let s = {}
+                const maximumChildren = 2
+
+                // base case: this is the head
+                if (depth === 0) {
+                    s.x = Math.round(
+                        width/2
+                    )
+                    s.y = Math.round(
+                        0 + diameter
+                    )
+                    return s
+                }
+                // recursive case: not the head
+                else {
+                    // calculate position from the parent's coordinates
+                    const p = getNodeCoordinates( d.tree.getParent(node) )
+                    const maxDepth = d.tree.getTreeDepth()
                     const depth = d.tree.getDepth(node)
-                    const i = d.tree.getNodeIndexIncludeBlanks(node)
-
-                    const width = 1000
-                    // miimum spread
-                    let s = {}
-                    const maximumChildren = 2
-
-                    // base case: this is the head
-                    if (depth === 0) {
-                        s.x = Math.round(
-                            width/2
-                        )
-                        s.y = Math.round(
-                            0 + diameter
-                        )
-                        return s
-                    }
-                    // recursive case: not the head
-                    else {
-                        // calculate position from the parent's coordinates
-                        const p = getNodeCoordinates( d.tree.getParent(node) )
-                        const maxDepth = d.tree.getTreeDepth()
-                        const depth = d.tree.getDepth(node)
-                        const depthMult = maxDepth - depth + 1
-                        const spread = margin * (maximumChildren-1) * Math.pow(maximumChildren, depthMult)
-                        const step = spread/(maximumChildren-1)
-                        // console.log("depthMult: ", depthMult)
-                        // console.log("depth: ", depth)
-                        // console.log("spread: ", spread)
-                        // console.log("p: ", p)
-                        // console.log("i: ", i)
-                        // console.log("step: ", step)
-                        // console.log("diameter: ", diameter)
-                        s.x = Math.round(
-                            p.x + i*step - spread/2
-                        )
-                        s.y = Math.round(
-                            depth*(diameter+margin)+diameter/2
-                        )
-                        let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect")
-                        rect.setAttribute("x", p.x + 0*step - spread/2)
-                        rect.setAttribute("y", depth*(diameter+margin)+diameter/2)
-                        rect.setAttribute("width", spread)
-                        rect.setAttribute("height", (depth+1)*(diameter)+diameter/2)
-                        rect.setAttribute("stroke", "orange")
-                        rect.setAttribute("fill", "none")
-                        svg.appendChild(rect)
-                        return s
-                    }
-                }
-
-                function drawCircle(node, svg) {
-                    // compute pixel coordinates
-                    let coord = getNodeCoordinates(node)
-                    // draw circle
-                    let c = document.createElementNS("http://www.w3.org/2000/svg", "circle")
-                    c.setAttribute("class", "node")
-                    c.id = node.name
-                    c.setAttribute("cx", coord.x )
-                    c.setAttribute("cy", coord.y )
-                    c.setAttribute("r", diameter)
-                    c.setAttribute("stroke", "darkblue")
-                    if (node === d.interface.current) {
-                        c.setAttribute("fill", "yellow")
-                    }
-                    else {
-                        c.setAttribute("fill", "lightblue")
-                    }
-                    svg.appendChild(c)
-                }
-
-                function drawName(node, svg) {
-                    const fontSize = 18
-                    const centerScalingFactor = 0.75
-
-                    // compute pixel coordinates
-                    let coord = getNodeCoordinates(node)
-
-                    // draw name of this node
-                    let text = document.createElementNS("http://www.w3.org/2000/svg", "text")
-                    text.setAttribute("font-size", `${fontSize}px`)
-                    text.setAttribute(
-                        "x",
-                        Math.round(coord.x - fontSize*centerScalingFactor/2)
+                    const depthMult = maxDepth - depth + 1
+                    const spread = margin * (maximumChildren-1) * Math.pow(maximumChildren, depthMult)
+                    const step = spread/(maximumChildren-1)
+                    // console.log("depthMult: ", depthMult)
+                    // console.log("depth: ", depth)
+                    // console.log("spread: ", spread)
+                    // console.log("p: ", p)
+                    // console.log("i: ", i)
+                    // console.log("step: ", step)
+                    // console.log("diameter: ", diameter)
+                    s.x = Math.round(
+                        p.x + i*step - spread/2
                     )
-                    text.setAttribute(
-                        "y",
-                        Math.round(coord.y + fontSize*centerScalingFactor/2)
+                    s.y = Math.round(
+                        depth*(diameter+margin)+diameter/2
                     )
-                    text.textContent = node.name
-                    svg.appendChild(text)
-
+                    // let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect")
+                    // rect.setAttribute("x", p.x + 0*step - spread/2)
+                    // rect.setAttribute("y", depth*(diameter+margin)+diameter/2)
+                    // rect.setAttribute("width", spread)
+                    // rect.setAttribute("height", (depth+1)*(diameter)+diameter/2)
+                    // rect.setAttribute("stroke", "orange")
+                    // rect.setAttribute("fill", "none")
+                    // svg.appendChild(rect)
+                    return s
                 }
+            }
 
-                function drawLine(node, svg) {
-                    // compute pixel coordinates
-                    let coord = getNodeCoordinates(node)
-                    
-                    // draw lines to each child
-                    let children = d.tree.getChildren(node)
-                    for (let child of children) {
-                        let childCoord = getNodeCoordinates( child )
-                        let l = document.createElementNS("http://www.w3.org/2000/svg", "line")
-                        l.setAttribute( "x1", coord.x )
-                        l.setAttribute( "y1", coord.y )
-                        l.setAttribute( "x2", childCoord.x )
-                        l.setAttribute( "y2", childCoord.y )
-                        l.setAttribute( "stroke", "black" )
-                        svg.appendChild(l)
-                    }
+            function drawCircle(node, svg) {
+                // compute pixel coordinates
+                let coord = getNodeCoordinates(node)
+                // draw circle
+                let c = document.createElementNS("http://www.w3.org/2000/svg", "circle")
+                c.setAttribute("class", "node")
+                c.id = node.name
+                c.setAttribute("cx", coord.x )
+                c.setAttribute("cy", coord.y )
+                c.setAttribute("r", diameter)
+                c.setAttribute("stroke", "darkblue")
+                if (node === d.interface.current) {
+                    c.setAttribute("fill", "yellow")
                 }
+                else {
+                    c.setAttribute("fill", "lightblue")
+                }
+                svg.appendChild(c)
+            }
 
-                // clear the "This tree is empty." placeholder
-                document.getElementById("treeContainer").textContent = ""
+            function drawName(node, svg) {
+                const fontSize = 18
+                const centerScalingFactor = 0.75
 
-                // remove any previously-rendered tree
-                document.getElementById("svg")?.remove()
+                // compute pixel coordinates
+                let coord = getNodeCoordinates(node)
 
-                // create a new svg element to hold all the circles, lines, and text
-                let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
-                svg.id = "svg"
-                // hide the image from screenreaders as the rest of our document contains the same information and is more accessible
-                svg.setAttribute("aria-hidden", "true")
-
-                // set alt text attributes
-                let title = document.createElementNS("http://www.w3.org/2000/svg", "title")
-                title.textContent = View.getTitle(d)
-                svg.appendChild(title)
-
-                let desc = document.createElementNS("http://www.w3.org/2000/svg", "desc")
-                desc.textContent = View.getDesc(d)
-                svg.appendChild(desc)
-
-                // render in depth-first search order because why not :) (actually it's because I really don't want to rewrite this whole breadth-first algorithm and I already have a working depth-first one, can you tell how much I love life? PS I hope you're having fun looking at my code LOL s/o from Joseph 2021-07-11)
-
-                const nodes = d.tree.getNodes()
-
-                nodes.map(
-                    n => drawLine(n, svg)
+                // draw name of this node
+                let text = document.createElementNS("http://www.w3.org/2000/svg", "text")
+                text.setAttribute("font-size", `${fontSize}px`)
+                text.setAttribute(
+                    "x",
+                    Math.round(coord.x - fontSize*centerScalingFactor/2)
                 )
-                nodes.map(
-                    n => drawCircle(n, svg)
+                text.setAttribute(
+                    "y",
+                    Math.round(coord.y + fontSize*centerScalingFactor/2)
                 )
-                nodes.map(
-                    n => drawName(n, svg)
-                )
-
-                document.getElementById("treeContainer").appendChild(svg)
+                text.textContent = node.name
+                svg.appendChild(text)
 
             }
+
+            function drawLine(node, svg) {
+                // compute pixel coordinates
+                let coord = getNodeCoordinates(node)
+                
+                // draw lines to each child
+                let children = d.tree.getChildren(node)
+                for (let child of children) {
+                    let childCoord = getNodeCoordinates( child )
+                    let l = document.createElementNS("http://www.w3.org/2000/svg", "line")
+                    l.setAttribute( "x1", coord.x )
+                    l.setAttribute( "y1", coord.y )
+                    l.setAttribute( "x2", childCoord.x )
+                    l.setAttribute( "y2", childCoord.y )
+                    l.setAttribute( "stroke", "black" )
+                    svg.appendChild(l)
+                }
+            }
+
+            function setViewbox(svg) {
+                const padding = 1
+                const b = svg.getBBox()
+                
+                const x = Math.floor(
+                    b.x-padding
+                )
+                const y = Math.ceil(
+                    b.y-padding
+                )
+                const width =  Math.ceil(
+                    b.width+padding*2
+                )
+                const height = Math.ceil(
+                    b.height+padding*2
+                )
+
+                const viewBox = `${x} ${y} ${width} ${height}`
+                console.log(viewBox)
+
+                svg.setAttribute("viewBox", viewBox)                
+            }
+
+            // clear the "This tree is empty." placeholder
+            document.getElementById("treeContainer").textContent = ""
+
+            // remove any previously-rendered tree
+            document.getElementById("svg")?.remove()
+
+            // create a new svg element to hold all the circles, lines, and text
+            let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+            svg.id = "svg"
+            // hide the image from screenreaders as the rest of our document contains the same information and is more accessible
+            svg.setAttribute("aria-hidden", "true")
+
+            // set alt text attributes
+            let title = document.createElementNS("http://www.w3.org/2000/svg", "title")
+            title.textContent = View.getTitle(d)
+            svg.appendChild(title)
+
+            let desc = document.createElementNS("http://www.w3.org/2000/svg", "desc")
+            desc.textContent = View.getDesc(d)
+            svg.appendChild(desc)
+
+            // render in depth-first search order because why not :) (actually it's because I really don't want to rewrite this whole breadth-first algorithm and I already have a working depth-first one, can you tell how much I love life? PS I hope you're having fun looking at my code LOL s/o from Joseph 2021-07-11)
+
+            const nodes = d.tree.getNodes()
+
+            nodes.map(
+                n => drawLine(n, svg)
+            )
+            nodes.map(
+                n => drawCircle(n, svg)
+            )
+            nodes.map(
+                n => drawName(n, svg)
+            )
+
+            document.getElementById("treeContainer").appendChild(svg)
+
+            // set svg viewbox
+            setViewbox( document.getElementById('svg') )
 
         },
 

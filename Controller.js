@@ -18,6 +18,7 @@ class Controller {
         document.getElementById("save").addEventListener('click', Controller.save)
         document.getElementById("loadDummy").addEventListener('click', Controller.load)
         document.getElementById("load").addEventListener('change', Controller.upload)
+        document.getElementById("exportSvg").addEventListener('click', Controller.exportSvg)
     }
 
     static moveLeft(e) {
@@ -62,12 +63,16 @@ class Controller {
         e.preventDefault()
     }
 
+    static download(data, filename) {
+        const a = document.createElement("a")
+        a.setAttribute("href", data)
+        a.setAttribute("download", filename)
+        a.click()
+    }
+
     static save(e) {
         let data = "data:text/json;charset=utf-8," + encodeURIComponent( Model.export() )
-        let a = document.createElement("a")
-        a.setAttribute("href", data)
-        a.setAttribute("download", `Tree (${new Date()}).json`)
-        a.click()
+        Controller.download(data, `Tree (${new Date()}).json`)
     }
 
     static load(e) {
@@ -86,7 +91,8 @@ class Controller {
     }
 
     static exportSvg(e) {
-        Model.exportSvg()
+        const data = View.exportSvg()
+        Controller.download(data, `Tree (${new Date()}).svg`)
     }
 
 }
