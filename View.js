@@ -34,6 +34,14 @@ class View {
         return `A computer science tree with arity ${arity} and depth ${treeDepth}. There are ${numberOfNodes} nodes, ${numberOfLeafNodes} of which are leaf nodes and ${numberOfNonLeafNodes} of which are non-leaf nodes.`
     }
 
+    static exportSvg(d) {
+        const svg = document.getElementById('svg')
+        const serializer = new XMLSerializer()
+        const escaped = serializer.serializeToString(svg)
+        const prefix = "data:image/svg+xml;charset=utf-8,"
+        return prefix + encodeURIComponent(escaped)
+    }
+
     static ModeDisplay = {
         init(d) {
             let e = document.createElement("div")
@@ -267,13 +275,23 @@ class View {
                 }
 
                 function drawName(node, svg) {
+                    const fontSize = 18
+                    const centerScalingFactor = 0.75
+
                     // compute pixel coordinates
                     let coord = getNodeCoordinates(node)
 
                     // draw name of this node
                     let text = document.createElementNS("http://www.w3.org/2000/svg", "text")
-                    text.setAttribute("x", coord.x)
-                    text.setAttribute("y", coord.y)
+                    text.setAttribute("font-size", `${fontSize}px`)
+                    text.setAttribute(
+                        "x",
+                        Math.round(coord.x - fontSize*centerScalingFactor/2)
+                    )
+                    text.setAttribute(
+                        "y",
+                        Math.round(coord.y + fontSize*centerScalingFactor/2)
+                    )
                     text.textContent = node.name
                     svg.appendChild(text)
 
@@ -424,7 +442,7 @@ class View {
 
                 let save = document.createElement("button")
                 save.id = "save"
-                save.textContent = "Save Tree to File..."
+                save.textContent = "Save Tree to File"
                 e.appendChild(save)
 
                 let loadDummy = document.createElement("button")
@@ -437,6 +455,20 @@ class View {
                 load.id = "load"
                 load.style.display = "none"
                 e.appendChild(load)
+
+                let h3export = document.createElement('h3')
+                h3export.textContent = "Export Image"
+                e.appendChild(h3export)
+
+                let exportSvg = document.createElement("button")
+                exportSvg.id = "exportSvg"
+                exportSvg.textContent = "Export Tree as SVG"
+                e.appendChild(exportSvg)
+
+                let exportPng = document.createElement("button")
+                exportPng.id = "exportPng"
+                exportPng.textContent = "Export Tree as PNG"
+                e.appendChild(exportPng)
 
                 let h3 = document.createElement("h3")
                 h3.textContent = "Exported image alt text"

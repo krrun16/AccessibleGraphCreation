@@ -85,6 +85,10 @@ class Controller {
         View.render( Model.getData() )
     }
 
+    static exportSvg(e) {
+        Model.exportSvg()
+    }
+
 }
 
 window.addEventListener("load", Controller.init)
