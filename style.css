@@ -102,3 +102,7 @@ th {
 th::after {
     content: ": ";
 }
+
+textarea {
+    resize: none;
+}

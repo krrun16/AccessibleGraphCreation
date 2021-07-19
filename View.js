@@ -17,6 +17,7 @@ class View {
         View.Status.render(d)
         View.Edit.render(d)
         View.Move.render(d)
+        View.File.render(d)
     }
 
     static getTitle(d) {
@@ -444,7 +445,7 @@ class View {
                 let alt = document.createElement("textarea")
                 alt.id = "altText"
                 alt.rows = 6
-                alt.addEventListener('click', (e) => e.target.select() )
+                alt.addEventListener('click', function(e) { this.select() } )
                 e.appendChild(alt)
 
             document.body.appendChild(e)
