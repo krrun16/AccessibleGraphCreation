@@ -183,7 +183,7 @@ class View {
             // set constants
             const diameter = 20
             // minimum margin
-            const margin = 100
+            const margin = 50
             
             const h = d.tree.head
 
@@ -219,7 +219,7 @@ class View {
                         const maxDepth = d.tree.getTreeDepth()
                         const depth = d.tree.getDepth(node)
                         const depthMult = maxDepth - depth + 1
-                        const spread = margin * (maximumChildren-1) * depthMult
+                        const spread = margin * (maximumChildren-1) * Math.pow(maximumChildren, depthMult)
                         const step = spread/(maximumChildren-1)
                         // console.log("depthMult: ", depthMult)
                         // console.log("depth: ", depth)
