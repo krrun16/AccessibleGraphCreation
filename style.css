@@ -77,9 +77,11 @@ h1, h2, h3, h4, h5, h6 {
     border-radius: 5px;
     position: relative;
     box-shadow: 0 1px white inset;
+    overflow: hidden;
+    /* filter: drop-shadow( 0 1px 50px rgba(0, 0, 0, 0.3) ); */
 }
 
-.window::before {
+/* .window::before {
     position: absolute;
     content: "";
     box-shadow: 0 1px 50px rgba(0, 0, 0, 0.3);
@@ -88,14 +90,14 @@ h1, h2, h3, h4, h5, h6 {
     bottom: 0px;
     right: 0px;
     z-index: -1;
-}
+} */
 
 .window h1 {
     background: linear-gradient(lightgray, darkgray);
     padding: 2px 10px;
     text-shadow: 0 1px rgba(255, 255, 255, 0.5);
     border-bottom: solid rgba(255, 255, 255, 0.5) 1px;
-    box-shadow: 0 -1px gray inset;
+    box-shadow: 0 -1px gray inset, 0 1px rgba(255, 255, 255, 0.5) inset;
     border-radius: 4px 4px 0 0;
     font-weight: 500;
     text-align: center;
@@ -104,6 +106,10 @@ h1, h2, h3, h4, h5, h6 {
 
 .window > * ~ * {
     margin: 5px 20px 0 20px;
+}
+
+.window > *:last-child {
+    margin-bottom: 20px;
 }
 
 .break {
