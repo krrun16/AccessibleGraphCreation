@@ -166,12 +166,6 @@ class View {
             e.id = "treeContainer"
             e.classList.add("window")
 
-                let panButton = document.createElement("div")
-                panButton.id = "panButton"
-                e.appendChild(panButton)
-
-                let imgContainer = document.createElement("div")
-
             document.body.appendChild(e)
 
             this.render(d)
@@ -180,9 +174,11 @@ class View {
         render(d) {
 
             // set constants
-            const diameter = 20
+            const diameter = 5
             // minimum margin
-            const margin = 50
+            const horizontalMargin = 25
+            const verticalMargin = 100
+
             
             const h = d.tree.head
 
@@ -213,7 +209,7 @@ class View {
                     const maxDepth = d.tree.getTreeDepth()
                     const depth = d.tree.getDepth(node)
                     const depthMult = maxDepth - depth + 1
-                    const spread = margin * (maximumChildren-1) * Math.pow(maximumChildren, depthMult)
+                    const spread = horizontalMargin * (maximumChildren-1) * Math.pow(maximumChildren, depthMult)
                     const step = spread/(maximumChildren-1)
                     // console.log("depthMult: ", depthMult)
                     // console.log("depth: ", depth)
@@ -226,7 +222,7 @@ class View {
                         p.x + i*step - spread/2
                     )
                     s.y = Math.round(
-                        depth*(diameter+margin)+diameter/2
+                        depth*(diameter+verticalMargin)+diameter/2
                     )
                     // let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect")
                     // rect.setAttribute("x", p.x + 0*step - spread/2)
@@ -241,16 +237,18 @@ class View {
             }
 
             function drawCircle(node, svg) {
+                const strokeWidth = 0.25
                 // compute pixel coordinates
-                let coord = getNodeCoordinates(node)
+                const coord = getNodeCoordinates(node)
                 // draw circle
-                let c = document.createElementNS("http://www.w3.org/2000/svg", "circle")
+                const c = document.createElementNS("http://www.w3.org/2000/svg", "circle")
                 c.setAttribute("class", "node")
                 c.id = node.name
                 c.setAttribute("cx", coord.x )
                 c.setAttribute("cy", coord.y )
-                c.setAttribute("r", diameter)
+                c.setAttribute("r", `${diameter}%`)
                 c.setAttribute("stroke", "darkblue")
+                c.setAttribute("stroke-width", `${strokeWidth}%`)
                 if (node === d.interface.current) {
                     c.setAttribute("fill", "yellow")
                 }
@@ -261,7 +259,7 @@ class View {
             }
 
             function drawName(node, svg) {
-                const fontSize = 18
+                const fontSize = 20
                 const centerScalingFactor = 0.75
 
                 // compute pixel coordinates
@@ -269,7 +267,7 @@ class View {
 
                 // draw name of this node
                 let text = document.createElementNS("http://www.w3.org/2000/svg", "text")
-                text.setAttribute("font-size", `${fontSize}px`)
+                text.setAttribute("font-size", `${fontSize}%`)
                 text.setAttribute(
                     "x",
                     Math.round(coord.x - fontSize*centerScalingFactor/2)
@@ -286,6 +284,7 @@ class View {
             function drawLine(node, svg) {
                 // compute pixel coordinates
                 let coord = getNodeCoordinates(node)
+                const strokeWidth = 0.25
                 
                 // draw lines to each child
                 let children = d.tree.getChildren(node)
@@ -297,6 +296,7 @@ class View {
                     l.setAttribute( "x2", childCoord.x )
                     l.setAttribute( "y2", childCoord.y )
                     l.setAttribute( "stroke", "black" )
+                    l.setAttribute("stroke-width", `${strokeWidth}%`)
                     svg.appendChild(l)
                 }
             }

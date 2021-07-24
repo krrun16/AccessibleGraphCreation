@@ -150,6 +150,7 @@ class Model {
     static import(json) {
 
         function buildTree(jsonHead, jsonParent, treeParent) {
+            console.log(jsonParent)
             if (!jsonParent && !treeParent) {
                 // this is a new tree, add the head
                 Model.tree.head = Model.tree.addNode(null, jsonHead.name, 0)
@@ -157,7 +158,10 @@ class Model {
                 buildTree(jsonHead, jsonHead, Model.tree.head)
             }
             else {
-                for ( let jsonChild of jsonParent.children ) {
+                const children = jsonParent.children.filter(
+                    item => !!item
+                )
+                for ( let jsonChild of children ) {
                     const treeChild = Model.tree.addNode(
                         treeParent,
                         jsonChild.name,
