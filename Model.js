@@ -20,13 +20,14 @@ class Model {
 
     static interface = {
         current: null,
-        nextNameIndex: 0,
     }
 
     static nodeNames = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
     
     static getNextName() {
-        return this.nodeNames[this.interface.nextNameIndex++]
+        return this.nodeNames.find(
+            name => !this.tree.getNodeByName(name)
+        )
     }
 
     static canMoveLeft() {
@@ -143,6 +144,25 @@ class Model {
         this.addNodeNthChild(1)
     }
 
+    static renameNode(name) {
+        return this.tree.renameNode(this.interface.current, name)
+    }
+
+    static removeNode() {
+        const oldCurrent = this.interface.current
+        const parent = this.tree.getParent(oldCurrent)
+        if (parent) {
+            this.interface.current = parent
+        }
+        else if (!parent && this.tree.head === oldCurrent) {
+            this.interface.current = null
+        }
+        else {
+            throw new Error("Cannot remove node")
+        }
+        this.tree.removeNode(oldCurrent)
+    }
+
     static export() {
         return JSON.stringify( this.getData() )
     }
@@ -175,7 +195,6 @@ class Model {
         // check if there is a tree in this file
         if ( json.tree.head ) {
             // load interface settings
-            this.interface.nextNameIndex = json.interface.nextNameIndex
     
             // delete the current tree
             delete this.tree

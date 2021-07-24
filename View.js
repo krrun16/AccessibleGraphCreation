@@ -174,10 +174,10 @@ class View {
         render(d) {
 
             // set constants
-            const diameter = 5
+            const diameter = 10
             // minimum margin
             const horizontalMargin = 25
-            const verticalMargin = 100
+            const verticalMargin = 25
 
             
             const h = d.tree.head
@@ -187,7 +187,7 @@ class View {
                 const depth = d.tree.getDepth(node)
                 const i = d.tree.getNodeIndexIncludeBlanks(node)
 
-                const width = 500
+                const width = document.getElementById("treeContainer").getBoundingClientRect().x
                 // miimum spread
                 let s = {}
                 const maximumChildren = 2
@@ -222,7 +222,7 @@ class View {
                         p.x + i*step - spread/2
                     )
                     s.y = Math.round(
-                        depth*(diameter+verticalMargin)+diameter/2
+                        depth * (diameter+verticalMargin) + diameter/2
                     )
                     // let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect")
                     // rect.setAttribute("x", p.x + 0*step - spread/2)
@@ -246,7 +246,7 @@ class View {
                 c.id = node.name
                 c.setAttribute("cx", coord.x )
                 c.setAttribute("cy", coord.y )
-                c.setAttribute("r", `${diameter}%`)
+                c.setAttribute("r", diameter)
                 c.setAttribute("stroke", "darkblue")
                 c.setAttribute("stroke-width", `${strokeWidth}%`)
                 if (node === d.interface.current) {
@@ -259,7 +259,7 @@ class View {
             }
 
             function drawName(node, svg) {
-                const fontSize = 20
+                const fontSize = 12
                 const centerScalingFactor = 0.75
 
                 // compute pixel coordinates
@@ -267,7 +267,7 @@ class View {
 
                 // draw name of this node
                 let text = document.createElementNS("http://www.w3.org/2000/svg", "text")
-                text.setAttribute("font-size", `${fontSize}%`)
+                text.setAttribute("font-size", fontSize)
                 text.setAttribute(
                     "x",
                     Math.round(coord.x - fontSize*centerScalingFactor/2)
@@ -302,7 +302,7 @@ class View {
             }
 
             function setViewbox(svg) {
-                const padding = 1
+                const padding = 20
                 const b = svg.getBBox()
                 
                 const x = Math.floor(
@@ -320,7 +320,7 @@ class View {
 
                 const viewBox = `${x} ${y} ${width} ${height}`
 
-                svg.setAttribute("viewBox", viewBox)                
+                svg.setAttribute("viewBox", viewBox)
             }
 
             // clear the "This tree is empty." placeholder

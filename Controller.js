@@ -11,6 +11,8 @@ class Controller {
         document.getElementById("asHead").addEventListener("click", Controller.addNodeHead)
         document.getElementById("asLeft").addEventListener("click", Controller.addNodeLeftChild)
         document.getElementById("asRight").addEventListener("click", Controller.addNodeRightChild)
+        document.getElementById("removeNode").addEventListener("click", Controller.removeNode)
+        document.getElementById("renameNode").addEventListener("click", Controller.renameNode)
         document.getElementById("moveUp").addEventListener("click", Controller.moveUp)
         document.getElementById("moveDown").addEventListener("click", Controller.moveDown)
         document.getElementById("moveLeft").addEventListener("click", Controller.moveLeft)
@@ -59,6 +61,24 @@ class Controller {
 
     static addNodeRightChild(e) {
         Model.addNodeRightChild()
+        View.render( Model.getData() )
+        e.preventDefault()
+    }
+
+    static removeNode(e) {
+        Model.removeNode()
+        View.render( Model.getData() )
+        e.preventDefault()
+    }
+
+    static renameNode(e) {
+        const d = Model.getData()
+        const newName = window.prompt(`New name for node ${d.interface.current.name}`, d.interface.current.name)
+        const response = Model.renameNode(newName)
+        if (!response) {
+            // node name did not update
+            window.alert(`Could not set this node's name to "${newName}", which is already in use.`)
+        }
         View.render( Model.getData() )
         e.preventDefault()
     }
