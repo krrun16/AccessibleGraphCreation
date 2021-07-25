@@ -73,13 +73,15 @@ class Controller {
 
     static renameNode(e) {
         const d = Model.getData()
-        const newName = window.prompt(`New name for node ${d.interface.current.name}`, d.interface.current.name)
-        const response = Model.renameNode(newName)
-        if (!response) {
-            // node name did not update
-            window.alert(`Could not set this node's name to "${newName}", which is already in use.`)
+        if (d.interface.current) {
+            const newName = window.prompt(`New name for node ${d.interface.current.name}`, d.interface.current.name)
+            const response = Model.renameNode(newName)
+            if (!response) {
+                // node name did not update
+                window.alert(`Could not set this node's name to "${newName}", which is already in use.`)
+            }
+            View.render( Model.getData() )
         }
-        View.render( Model.getData() )
         e.preventDefault()
     }
 

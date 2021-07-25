@@ -131,7 +131,9 @@ class Model {
     }
     
     static addNodeHead() {
-        this.interface.current = this.tree.addNode(null, this.getNextName(), 0) 
+        if ( !this.tree.head ) {
+            this.interface.current = this.tree.addNode(null, this.getNextName(), 0) 
+        }
     }
     
     static addNodeNthChild(n) {
@@ -139,30 +141,38 @@ class Model {
     }
     
     static addNodeLeftChild() {
-        this.addNodeNthChild(0)
+        if ( this.canAddLeftChild() ) {
+            this.addNodeNthChild(0)
+        }
     }
 
     static addNodeRightChild() {
-        this.addNodeNthChild(1)
+        if ( this.canAddRightChild() ) {
+            this.addNodeNthChild(1)
+        }
     }
 
     static renameNode(name) {
-        return this.tree.renameNode(this.interface.current, name)
+        if (this.interface.current) {
+            return this.tree.renameNode(this.interface.current, name)
+        }
     }
 
     static removeNode() {
-        const oldCurrent = this.interface.current
-        const parent = this.tree.getParent(oldCurrent)
-        if (parent) {
-            this.interface.current = parent
+        if (this.interface.current) {
+            const oldCurrent = this.interface.current
+            const parent = this.tree.getParent(oldCurrent)
+            if (parent) {
+                this.interface.current = parent
+            }
+            else if (!parent && this.tree.head === oldCurrent) {
+                this.interface.current = null
+            }
+            else {
+                throw new Error("Cannot remove node")
+            }
+            this.tree.removeNode(oldCurrent)
         }
-        else if (!parent && this.tree.head === oldCurrent) {
-            this.interface.current = null
-        }
-        else {
-            throw new Error("Cannot remove node")
-        }
-        this.tree.removeNode(oldCurrent)
     }
 
     static export() {
