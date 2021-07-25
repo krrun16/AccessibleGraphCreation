@@ -222,7 +222,7 @@ class Model {
             this.interface.current = this.tree.getNodeByName(json.interface.current.name)
         }
         else {
-            window.alert("This file cannot be loaded because its tree is missing a head.")
+            throw new Error("Invalid file")
         }
         
     }

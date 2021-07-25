@@ -537,7 +537,7 @@ class View {
                 e.appendChild(saveLoadMenu)
 
                 const h2export = document.createElement('h2')
-                h2export.textContent = "Export Image"
+                h2export.textContent = "Export"
                 h2export.className = "menubarLabel"
                 e.appendChild(h2export)
 
@@ -556,6 +556,14 @@ class View {
                     }
                 )
                 e.appendChild(exportPng)
+
+                const exportHtml = View.ButtonItem(
+                    {
+                        id: "exportHtml",
+                        textContent: "Export Tree as HTML",
+                    }
+                )
+                e.appendChild(exportHtml)
 
                 const h2 = document.createElement("h2")
                 h2.textContent = "Exported Image Alt Text"

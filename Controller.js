@@ -128,7 +128,12 @@ class Controller {
     }
 
     static readFile(e) {
-        Model.import( JSON.parse(e.target.result) )
+        try {
+            Model.import( JSON.parse(e.target.result) )
+        }
+        catch (e) {
+            window.alert("This file cannot be loaded because its tree is missing a head.")
+        }
         View.render( Model.getData() )
     }
 
