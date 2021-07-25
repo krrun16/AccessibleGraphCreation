@@ -116,6 +116,33 @@ class View {
                 e.appendChild(moveLabel)
                 e.appendChild( populateMenu("moveMenu", d.view.actions.move, "moveLabel") )
 
+                const treePropertiesLabel = document.createElement('h2')
+                treePropertiesLabel.id = "treePropertiesLabel"
+                treePropertiesLabel.textContent = "Tree Properties"
+                treePropertiesLabel.className = "menubarLabel"
+                e.appendChild(treePropertiesLabel)
+
+                const treePropertiesContainer = document.createElement("div")
+                treePropertiesContainer.id = "treePropertiesContainer"
+
+                    const span = document.createElement('span')
+                    span.textContent = "Tree has at most"
+                    treePropertiesContainer.appendChild(span)
+
+                    const spinner = document.createElement('input')
+                    spinner.id = "arity"
+                    spinner.type = "number"
+                    spinner.min = 1
+                    spinner.max = 16
+                    spinner.step = 1
+                    spinner.value = 2
+                    treePropertiesContainer.appendChild(spinner)
+
+                    const span2 = document.createElement('span')
+                    span2.textContent = "children"
+                    treePropertiesContainer.appendChild(span2)
+
+                e.appendChild(treePropertiesContainer)
 
             document.body.appendChild(e)
 

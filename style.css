@@ -184,9 +184,20 @@ textarea:focus {
 }
 
 #edit {
-    width: 200px;
+    width: 275px;
     flex-shrink: 0;
 }
+
+    #treePropertiesContainer {
+        padding-left: 30px;
+        font-weight: 500;
+    }
+
+    #treePropertiesContainer > input {
+        margin: 0 5px;
+        width: 50px;
+        text-align: center;
+    }
 
 #treeContainer {
     flex-grow: 1;
