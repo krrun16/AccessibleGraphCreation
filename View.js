@@ -260,7 +260,6 @@ class View {
 
             function drawName(node, svg) {
                 const fontSize = 12
-                const centerScalingFactor = 0.75
 
                 // compute pixel coordinates
                 let coord = getNodeCoordinates(node)
@@ -270,12 +269,13 @@ class View {
                 text.setAttribute("font-size", fontSize)
                 text.setAttribute(
                     "x",
-                    Math.round(coord.x - fontSize*centerScalingFactor/2)
+                    Math.round(coord.x)
                 )
                 text.setAttribute(
                     "y",
-                    Math.round(coord.y + fontSize*centerScalingFactor/2)
+                    Math.round(coord.y + diameter/2)
                 )
+                text.setAttribute("text-anchor", "middle")
                 text.textContent = node.name
                 svg.appendChild(text)
 
