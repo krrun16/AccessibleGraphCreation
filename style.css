@@ -20,9 +20,8 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     flex-direction: column;
     background: lightgray;
-    margin: 5px;
+    margin: -1px;
     border: solid darkgray 1px;
-    border-radius: 5px;
     position: relative;
     box-shadow: 0 1px white inset;
     overflow: hidden;
@@ -46,14 +45,13 @@ h1, h2, h3, h4, h5, h6 {
     text-shadow: 0 1px rgba(255, 255, 255, 0.5);
     border-bottom: solid rgba(255, 255, 255, 0.5) 1px;
     box-shadow: 0 -1px gray inset, 0 1px rgba(255, 255, 255, 0.5) inset;
-    border-radius: 4px 4px 0 0;
     font-weight: 500;
     text-align: center;
     margin-bottom: 5px;
 }
 
 .window > * ~ * {
-    margin: 5px 20px 0 20px;
+    /* margin: 5px 20px 0 20px; */
 }
 
 .window > *:last-child {
@@ -69,11 +67,36 @@ ol {
     text-align: center;
 }
 
-ol button {
-    width: 100%;
+ol li:not(:last-child) {
+    margin-bottom: -1px;
 }
 
-button {
+.menubarItem {
+    width: 100%;
+    text-align: left;
+    padding: 3px 20px;
+    border: solid transparent 1px;
+    background: transparent;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    font-weight: 500;
+    border: solid transparent 1px;
+    border-left: none;
+}
+
+    .menubarItem.disabled {
+        color: gray;
+    }
+
+    .menubarItem:not(.disabled):hover {
+        border: solid rgb(16, 80, 143) 1px;
+        border-left: none;
+        background: linear-gradient(dodgerblue, rgb(16, 80, 143));
+        color: white;
+    }
+
+/* .button {
     border-radius: 999px;
     padding: 3px 20px;
     background: linear-gradient(white, lightgray, white);
@@ -87,7 +110,7 @@ button {
     font-weight: 500;
 }
 
-/* button::before {
+.button::before {
     content: "";
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.5);
@@ -96,9 +119,9 @@ button {
     top: 0;
     right: 2px;
     bottom: 60%;
-} */
+}
 
-/* button::after {
+.button::after {
     content: attr(data-content);
     position: absolute;
     top: 0;
@@ -106,15 +129,15 @@ button {
     right: 0;
     bottom: 0;
     color: black;
-} */
+}
 
-button:active:focus {
+.button:active:focus {
     filter: brightness(70%);
 }
 
-button:focus {
+.button:focus {
     box-shadow: 0 0 5px 3px dodgerblue, 0 1px darkgray, 0 1px lightgray inset;
-}
+} */
 
 textarea {
     border: solid darkgray 1px;
@@ -126,11 +149,6 @@ textarea {
 
 textarea:focus {
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5) inset, 0 0 5px 3px dodgerblue;
-}
-
-*:focus {
-    outline: none;
-    box-shadow: 0 0 5px 3px dodgerblue;
 }
 
 #edit {

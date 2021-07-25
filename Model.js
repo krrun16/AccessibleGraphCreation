@@ -86,18 +86,20 @@ class Model {
         }
 
         return {
+            add: [
+                new Action("asHead", "Head to Tree", !!!this.tree.head),
+                new Action("asLeft", `Left Child`, this.canAddLeftChild()),
+                new Action("asRight", `Right Child`, this.canAddRightChild()),
+            ],
             edit: [
-                new Action("asHead", "Add Head to Tree", !!!this.tree.head),
-                new Action("asLeft", `Add Left Child of ${this.interface.current?.name}`, this.canAddLeftChild()),
-                new Action("asRight", `Add Right Child of ${this.interface.current?.name}`, this.canAddRightChild()),
-                new Action("removeNode", `Remove ${this.interface.current?.name}`, !!this.interface.current),
-                new Action("renameNode", `Rename ${this.interface.current?.name}`, !!this.interface.current)
+                new Action("removeNode", `Remove`, !!this.interface.current),
+                new Action("renameNode", `Rename`, !!this.interface.current),
             ],
             move: [
-                new Action("moveUp", `Move to Parent of ${this.interface.current?.name}`, this.canMoveUp() ),
-                new Action("moveDown", `Move to First Child of ${this.interface.current?.name}`, this.canMoveDown() ),
-                new Action("moveLeft", `Move Left of ${this.interface.current?.name}`, this.canMoveLeft() ),
-                new Action("moveRight", `Move Right of ${this.interface.current?.name}`, this.canMoveRight() ),
+                new Action("moveUp", `To Parent`, this.canMoveUp() ),
+                new Action("moveDown", `To First Child`, this.canMoveDown() ),
+                new Action("moveLeft", `Left`, this.canMoveLeft() ),
+                new Action("moveRight", `Right`, this.canMoveRight() ),
             ]
         }
     }

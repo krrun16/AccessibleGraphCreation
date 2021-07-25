@@ -1,11 +1,8 @@
 class View {
 
     static init(d) {
-        const b = document.body
         this.Edit.init(d)
         this.TreeView.init(d)
-        this.Move.init(d)
-        this.Break.init()
         this.Summary.init(d)
         this.Status.init(d)
         this.File.init(d)
@@ -16,7 +13,6 @@ class View {
         View.Summary.render(d)
         View.Status.render(d)
         View.Edit.render(d)
-        View.Move.render(d)
         View.File.render(d)
     }
 
@@ -58,10 +54,10 @@ class View {
     static ButtonItem(action) {
         let li = document.createElement('li')
         let button = document.createElement('button')
-        li.id = action.id
         button.textContent = action.textContent
-        li.style.display = action.isEnabled ? "" : "none"
         button.href = "#"
+        button.className = "menubarItem"
+        button.id = action.id
         li.appendChild(button)
         return li
     }
@@ -80,82 +76,64 @@ class View {
 
     static Edit = {
         init(d) {
+
+            function populateMenu(menuId, actions, labeledBy) {
+                const menu = document.createElement('ol')
+                menu.setAttribute("aria-labelledby", labeledBy)
+                menu.id = menuId
+                actions.map(
+                    action => menu.appendChild( View.ButtonItem(action) )
+                )
+                return menu
+            }
+
+
             let e = document.createElement("div")
             e.classList.add("window")
             e.id = "edit"
 
-                let editContainerLabel = document.createElement("h1")
-                editContainerLabel.textContent = "Edit Nodes"
+                const editContainerLabel = document.createElement("h1")
+                editContainerLabel.textContent = "Edit and Move"
                 editContainerLabel.id = "editContainerLabel"
-            
-                let insertMenu = document.createElement("ol")
-                insertMenu.id = "insertMenu"
-                insertMenu.setAttribute("aria-labelledby", "editContainerLabel")
-
-
-                for (let a of d.view.actions.edit) {
-                    insertMenu.appendChild(
-                        View.ButtonItem(a)
-                    )
-                }
-
                 e.appendChild(editContainerLabel)
-                e.appendChild(insertMenu)
+
+                const addLabel = document.createElement("h2")
+                addLabel.id = "addLabel"
+                addLabel.textContent = "Add"
+                e.appendChild(addLabel)
+                e.appendChild( populateMenu("addMenu", d.view.actions.add, "addLabel") )
+
+                const editLabel = document.createElement('h2')
+                editLabel.id = "editLabel"
+                editLabel.textContent = "Edit"
+                e.appendChild(editLabel)
+                e.appendChild( populateMenu("editMenu", d.view.actions.edit, "editLabel") )
+
+                const moveLabel = document.createElement('h2')
+                moveLabel.id = "moveLabel"
+                moveLabel.textContent = "Move"
+                e.appendChild(moveLabel)
+                e.appendChild( populateMenu("moveMenu", d.view.actions.move, "moveLabel") )
+
 
             document.body.appendChild(e)
+            
+            this.render(d)
         },
 
         render(d) {
-            let e = document.getElementById("edit")
-            for (let a of d.view.actions.edit) {
-                let t = document.getElementById(a.id)
-                t.firstElementChild.textContent = a.textContent
-                t.style.display = a.isEnabled ? "" : "none"
-            }
-        }
-    }
-
-    static Move = {
-        init(d) {
-            let e = document.createElement("div")
-            e.id = "move"
-            e.classList.add("window")
-
-                let h1 = document.createElement("h1")
-                h1.textContent = "Move Cursor"
-                h1.id = "moveMenuLabel"
-                e.appendChild(h1)
-
-                // let horizontalCategory = document.createElement('h2')
-                // horizontalCategory.textContent = "Horizontally"
-                // e.appendChild(horizontalCategory)
-
-                let moveMenu = document.createElement('ol')
-                moveMenu.setAttribute("aria-labelledby", "moveMenuLabel")
-                moveMenu.id = 'moveMenu'
-
-                for (let a of d.view.actions.move) {
-                    moveMenu.appendChild(
-                        View.ButtonItem(a)
-                    )
+            const actions = d.view.actions.add
+            .concat(d.view.actions.edit)
+            .concat(d.view.actions.move)
+            for (let a of actions) {
+                const t = document.getElementById(a.id)
+                t.textContent = a.textContent
+                if (a.isEnabled) {
+                    t.classList.remove("disabled")
                 }
-
-                e.appendChild(moveMenu)
-
-                // let verticalCategory = document.createElement('h2')
-                // verticalCategory.textContent = "Vertically"
-                // e.appendChild(verticalCategory)
-
-            document.body.appendChild(e)
-
-        },
-
-        render(d) {
-            let insertMenu = document.getElementById("move")
-            for (let a of d.view.actions.move) {
-                let t = document.getElementById(a.id)
-                t.firstElementChild.textContent = a.textContent
-                t.style.display = a.isEnabled ? "" : "none"
+                else {
+                    t.classList.add("disabled")
+                }
             }
         }
     }
