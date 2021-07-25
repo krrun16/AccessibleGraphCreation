@@ -1,7 +1,6 @@
 class Tree {
     constructor() {
-        this.maximumChildren = 2
-        this.mustHaveMaximumChildren = true
+        this.arity = 2
         this.head = null
         return this
     }

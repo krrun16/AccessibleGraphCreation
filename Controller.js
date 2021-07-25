@@ -17,11 +17,18 @@ class Controller {
         document.getElementById("moveDown").addEventListener("click", Controller.moveDown)
         document.getElementById("moveLeft").addEventListener("click", Controller.moveLeft)
         document.getElementById("moveRight").addEventListener("click", Controller.moveRight)
+        document.getElementById('arity').addEventListener('change', Controller.changeArity)
         document.getElementById("save").addEventListener('click', Controller.save)
         document.getElementById('svg').addEventListener('click', Controller.selectNode)
         document.getElementById("loadDummy").addEventListener('click', Controller.load)
         document.getElementById("load").addEventListener('change', Controller.upload)
         document.getElementById("exportSvg").addEventListener('click', Controller.exportSvg)
+    }
+
+    static changeArity(e) {
+        const newArity = Number(e.target.value)
+        Model.changeArity(newArity)
+        View.render( Model.getData() )
     }
 
     static selectNode(e) {

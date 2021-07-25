@@ -169,7 +169,7 @@ ol li {
     box-shadow: 0 0 5px 3px dodgerblue, 0 1px darkgray, 0 1px lightgray inset;
 } */
 
-textarea {
+textarea, input {
     border: solid darkgray 1px;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5) inset;
     resize: none;
@@ -179,12 +179,12 @@ textarea {
     outline: none;
 }
 
-textarea:focus {
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.5) inset, 0 0 5px 3px dodgerblue;
+textarea:focus, input:focus {
+    box-shadow:  0 0 5px 3px dodgerblue;
 }
 
 #edit {
-    width: 275px;
+    width: 300px;
     flex-shrink: 0;
 }
 
@@ -197,6 +197,7 @@ textarea:focus {
         margin: 0 5px;
         width: 50px;
         text-align: center;
+        padding-right: 0;
     }
 
 #treeContainer {
@@ -243,13 +244,17 @@ textarea:focus {
         content: ": ";
     }
 
-#summaryContainer {
-    width: 300px;
-}
-
     #summary {
         border-collapse: collapse;
     }
+
+        #summary th {
+            padding: 2px 5px 2px 20px;
+        }
+
+        #summary td {
+            padding: 2px 20px 2px 5px;
+        }
     
         #summary > tr:nth-child(odd) {
             background: rgb(210, 233, 255);
@@ -269,7 +274,6 @@ textarea:focus {
     }
 
 #file {
-    width: 300px;
     flex-grow: 1;
 }
 

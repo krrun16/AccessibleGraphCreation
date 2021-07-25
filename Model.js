@@ -69,7 +69,7 @@ class Model {
 
         return [
             new SummaryItem("numberOfNodes", "Number of Nodes", this.tree.numberOfNodes()),
-            new SummaryItem("arity", "Arity", this.tree.maximumChildren),
+            new SummaryItem("arity", "Arity", this.tree.arity),
             new SummaryItem("numberOfLeafNodes", "Number of Leaf Nodes", this.tree.numberOfLeafNodes() ),
             new SummaryItem("numberOfNonLeafNodes", "Number of Non-Leaf Nodes", this.tree.numberOfNonLeafNodes() ),
             new SummaryItem("treeDepth", "Tree Depth", this.tree.getTreeDepth() ),
@@ -102,6 +102,11 @@ class Model {
                 new Action("moveRight", `Right`, this.canMoveRight() ),
             ]
         }
+    }
+
+    static changeArity(arity) {
+        // before we start, cry
+        this.tree.arity = arity
     }
 
     static move(d) {

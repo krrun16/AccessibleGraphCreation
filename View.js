@@ -126,7 +126,7 @@ class View {
                 treePropertiesContainer.id = "treePropertiesContainer"
 
                     const span = document.createElement('span')
-                    span.textContent = "Tree has at most"
+                    span.textContent = "Nodes have at most"
                     treePropertiesContainer.appendChild(span)
 
                     const spinner = document.createElement('input')
