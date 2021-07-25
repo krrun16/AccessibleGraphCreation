@@ -100,24 +100,27 @@ class View {
                 const addLabel = document.createElement("h2")
                 addLabel.id = "addLabel"
                 addLabel.textContent = "Add"
+                addLabel.className = "menubarLabel"
                 e.appendChild(addLabel)
                 e.appendChild( populateMenu("addMenu", d.view.actions.add, "addLabel") )
 
                 const editLabel = document.createElement('h2')
                 editLabel.id = "editLabel"
                 editLabel.textContent = "Edit"
+                editLabel.className = "menubarLabel"
                 e.appendChild(editLabel)
                 e.appendChild( populateMenu("editMenu", d.view.actions.edit, "editLabel") )
 
                 const moveLabel = document.createElement('h2')
                 moveLabel.id = "moveLabel"
                 moveLabel.textContent = "Move"
+                moveLabel.className = "menubarLabel"
                 e.appendChild(moveLabel)
                 e.appendChild( populateMenu("moveMenu", d.view.actions.move, "moveLabel") )
 
 
             document.body.appendChild(e)
-            
+
             this.render(d)
         },
 

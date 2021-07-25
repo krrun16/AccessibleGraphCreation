@@ -4,7 +4,7 @@
 }
 
 body {
-    font-size: 12pt;
+    font-size: 10pt;
     display: flex;
     flex-flow: wrap;
     background: white;
@@ -50,9 +50,9 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 5px;
 }
 
-.window > * ~ * {
-    /* margin: 5px 20px 0 20px; */
-}
+/* .window > * ~ * {
+    margin: 5px 20px 0 20px;
+} */
 
 .window > *:last-child {
     margin-bottom: 20px;
@@ -64,6 +64,7 @@ h1, h2, h3, h4, h5, h6 {
 
 ol {
     padding: 0;
+    margin: 0;
     text-align: center;
 }
 
@@ -71,10 +72,18 @@ ol li:not(:last-child) {
     margin-bottom: -1px;
 }
 
+.menubarLabel {
+    padding-left: 10px;
+    font-size: inherit;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
 .menubarItem {
+    font-size: inherit;
     width: 100%;
     text-align: left;
-    padding: 3px 20px;
+    padding: 3px 20px 3px 30px;
     border: solid transparent 1px;
     background: transparent;
     white-space: nowrap;
@@ -94,6 +103,24 @@ ol li:not(:last-child) {
         border-left: none;
         background: linear-gradient(dodgerblue, rgb(16, 80, 143));
         color: white;
+    }
+
+ol li {
+    position: relative;
+}
+
+    ol li:last-child::after {
+        position: absolute;
+        content: "";
+        bottom: -4px;
+        left: 0;
+        right: 0;
+        width: 100%;
+        border-bottom: solid gray 1px;
+    }
+
+    ol:last-child li:last-child::after {
+        display: none;
     }
 
 /* .button {
