@@ -182,7 +182,6 @@ class Model {
     static import(json) {
 
         function buildTree(jsonHead, jsonParent, treeParent) {
-            console.log(jsonParent)
             if (!jsonParent && !treeParent) {
                 // this is a new tree, add the head
                 Model.tree.head = Model.tree.addNode(null, jsonHead.name, 0)

@@ -18,9 +18,20 @@ class Controller {
         document.getElementById("moveLeft").addEventListener("click", Controller.moveLeft)
         document.getElementById("moveRight").addEventListener("click", Controller.moveRight)
         document.getElementById("save").addEventListener('click', Controller.save)
+        document.getElementById('svg').addEventListener('click', Controller.selectNode)
         document.getElementById("loadDummy").addEventListener('click', Controller.load)
         document.getElementById("load").addEventListener('change', Controller.upload)
         document.getElementById("exportSvg").addEventListener('click', Controller.exportSvg)
+    }
+
+    static selectNode(e) {
+        // filter the path by classname
+        const target = e.path.find(
+            element => element.classList?.contains("node")
+        )
+        Model.interface.current = Model.tree.getNodeByName( target.getAttribute("data-name") )
+        View.render( Model.getData() )
+        e.preventDefault()
     }
 
     static moveLeft(e) {

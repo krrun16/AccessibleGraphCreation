@@ -35,7 +35,6 @@ class Tree {
 
     renameNode(node, newName) {
         const nodeWithSameName = this.getNodeByName(newName)
-        console.log(node, nodeWithSameName)
         if (nodeWithSameName === undefined && node) {
             // this new name is unique
             node.name = newName

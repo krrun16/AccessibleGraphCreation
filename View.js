@@ -143,9 +143,15 @@ class View {
 
     static TreeView = {
         init(d) {
-            let e = document.createElement("div")
+            const e = document.createElement("div")
             e.id = "treeContainer"
             e.classList.add("window")
+
+                const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+                svg.id = "svg"
+                // hide the image from screenreaders as the rest of our document contains the same information and is more accessible
+                svg.setAttribute("aria-hidden", "true")
+                e.appendChild(svg)
 
             document.body.appendChild(e)
 
@@ -223,8 +229,6 @@ class View {
                 const coord = getNodeCoordinates(node)
                 // draw circle
                 const c = document.createElementNS("http://www.w3.org/2000/svg", "circle")
-                c.setAttribute("class", "node")
-                c.id = node.name
                 c.setAttribute("cx", coord.x )
                 c.setAttribute("cy", coord.y )
                 c.setAttribute("r", diameter)
@@ -232,13 +236,12 @@ class View {
                 if (node === d.interface.current) {
                     c.setAttribute("fill", "url(#currentNodeGradient")
                     c.setAttribute("stroke", "#00040a")
-                    c.setAttribute("class", "currentNode")
                 }
                 else {
                     c.setAttribute("fill", "url(#nodeGradient)")
                     c.setAttribute("stroke", "#2f67ba")
                 }
-                svg.appendChild(c)
+                return c
             }
 
             function drawName(node, svg) {
@@ -261,8 +264,26 @@ class View {
                 text.setAttribute("text-anchor", "middle")
                 text.setAttribute("fill", "white")
                 text.textContent = node.name
-                svg.appendChild(text)
+                return text
+            }
 
+            function drawNode(node, svg) {
+                const g = document.createElementNS("http://www.w3.org/2000/svg", "g")
+                g.setAttribute("class", "node")
+                g.setAttribute("data-name", node.name)
+                g.appendChild(
+                    drawCircle(node, svg)
+                )
+                g.appendChild(
+                    drawName(node, svg)
+                )
+                if ( node === d.interface.current ) {
+                    g.setAttribute("class", "node currentNode")
+                }
+                else {
+                    g.setAttribute("class", "node")
+                }
+                svg.appendChild(g)
             }
 
             function drawLine(node, svg) {
@@ -307,17 +328,12 @@ class View {
                 svg.setAttribute("viewBox", viewBox)
             }
 
-            // clear the "This tree is empty." placeholder
-            document.getElementById("treeContainer").textContent = ""
-
             // remove any previously-rendered tree
-            document.getElementById("svg")?.remove()
-
-            // create a new svg element to hold all the circles, lines, and text
-            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
-            svg.id = "svg"
-            // hide the image from screenreaders as the rest of our document contains the same information and is more accessible
-            svg.setAttribute("aria-hidden", "true")
+            const svg = document.getElementById("svg")
+            let max = 999
+            while (svg.firstChild && max-->0) {
+                svg.removeChild(svg.firstChild)
+            }
 
             // create gradients
 
@@ -373,10 +389,7 @@ class View {
                 n => drawLine(n, svg)
             )
             nodes.map(
-                n => drawCircle(n, svg)
-            )
-            nodes.map(
-                n => drawName(n, svg)
+                n => drawNode(n, svg)
             )
 
             document.getElementById("treeContainer").appendChild(svg)
