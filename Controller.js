@@ -29,9 +29,11 @@ class Controller {
         const target = e.path.find(
             element => element.classList?.contains("node")
         )
-        Model.interface.current = Model.tree.getNodeByName( target.getAttribute("data-name") )
-        View.render( Model.getData() )
-        e.preventDefault()
+        if (target) {
+            Model.interface.current = Model.tree.getNodeByName( target.getAttribute("data-name") )
+            View.render( Model.getData() )
+            e.preventDefault()
+        }
     }
 
     static moveLeft(e) {

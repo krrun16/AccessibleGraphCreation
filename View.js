@@ -3,17 +3,15 @@ class View {
     static init(d) {
         this.Edit.init(d)
         this.TreeView.init(d)
-        this.Summary.init(d)
         this.Status.init(d)
-        this.File.init(d)
+        this.RightPanel.init(d)
     }
 
     static render(d) {
-        View.TreeView.render(d)
-        View.Summary.render(d)
-        View.Status.render(d)
-        View.Edit.render(d)
-        View.File.render(d)
+        this.TreeView.render(d)
+        this.Status.render(d)
+        this.Edit.render(d)
+        this.RightPanel.render(d)
     }
 
     static getTitle(d) {
@@ -154,8 +152,6 @@ class View {
                 e.appendChild(svg)
 
             document.body.appendChild(e)
-
-            this.render(d)
         },
 
         render(d) {
@@ -405,43 +401,10 @@ class View {
         let e = document.createElement("div")
     }
 
-    static Summary = {
-        init(d) {
-            let e = document.createElement('div')
-            e.id = "summaryContainer"
-            e.setAttribute("aria-labelledby", "summaryLabel")
-            e.className = "window"
-
-                let summaryLabel = document.createElement("h1")
-                summaryLabel.id = "summaryLabel"
-                summaryLabel.textContent = "Summary"
-                e.appendChild(summaryLabel)
-
-                let summary = document.createElement('table')
-                summary.id = "summary"
-                e.appendChild(summary)
-
-            document.body.appendChild(e)
-            
-            for (let item of d.view.summary) {
-                let tr = View.TableRow(item)
-                summary.appendChild(tr)
-            }
-
-            this.render(d)
-        },
-        render(d) {
-            for (let item of d.view.summary) {
-                document.getElementById(item.id).textContent = item.value
-            }
-        }
-    }
-
     static Status =  {
         init(d) {
             let e = document.createElement("div")
             e.id = "statusContainer"
-            e.className = "window"
             e.setAttribute("aria-live", "polite")
             e.setAttribute("role", "alert")
             e.setAttribute("aria-labelledby", "statusLabel")
@@ -455,7 +418,7 @@ class View {
                 status.id = "status"
                 e.appendChild(status)
 
-            document.body.appendChild(e)
+                document.getElementById("treeContainer").appendChild(e)
             this.render(d)
         },
 
@@ -472,6 +435,36 @@ class View {
         },
     }
 
+    static Summary = {
+        init(d) {
+            let e = document.createElement('div')
+            e.id = "summaryContainer"
+            e.className = "window"
+            e.setAttribute("aria-labelledby", "summaryLabel")
+
+                let summaryLabel = document.createElement("h1")
+                summaryLabel.id = "summaryLabel"
+                summaryLabel.textContent = "Summary"
+                e.appendChild(summaryLabel)
+
+                let summary = document.createElement('table')
+                summary.id = "summary"
+                e.appendChild(summary)
+            
+            for (let item of d.view.summary) {
+                let tr = View.TableRow(item)
+                summary.appendChild(tr)
+            }
+
+            return e
+        },
+        render(d) {
+            for (let item of d.view.summary) {
+                document.getElementById(item.id).textContent = item.value
+            }
+        }
+    }
+
     static File = {
 
         init(d) {
@@ -483,48 +476,72 @@ class View {
                 h1.textContent = 'File'
                 e.appendChild(h1)
 
-                let save = document.createElement("button")
-                save.id = "save"
-                save.textContent = "Save Tree to File"
-                e.appendChild(save)
+                const saveAndLoadLabel = document.createElement('h2')
+                saveAndLoadLabel.textContent = "Save and Load"
+                saveAndLoadLabel.id = "saveAndLoadLabel"
+                saveAndLoadLabel.className = "menubarLabel"
+                e.appendChild(saveAndLoadLabel)
 
-                let loadDummy = document.createElement("button")
-                loadDummy.id = "loadDummy"
-                loadDummy.textContent = "Load Tree from File..."
-                e.appendChild(loadDummy)
-                
-                let load = document.createElement("input")
-                load.type = "file"
-                load.id = "load"
-                load.style.display = "none"
-                e.appendChild(load)
+                const saveLoadMenu = document.createElement('ol')
+                saveLoadMenu.setAttribute("aria-labeledby", "saveAndLoadLabel")
 
-                let h2export = document.createElement('h2')
+                    const save = View.ButtonItem(
+                        {
+                            id: "save",
+                            textContent: "Save Tree to File",
+                        }
+                    )
+                    saveLoadMenu.appendChild(save)
+
+                    const loadDummy = View.ButtonItem(
+                        {
+                            id: "loadDummy",
+                            textContent: "Load Tree from File...",
+                        }
+                    )
+                    saveLoadMenu.appendChild(loadDummy)
+
+                    const load = document.createElement("input")
+                    load.type = "file"
+                    load.id = "load"
+                    load.style.display = "none"
+                    saveLoadMenu.appendChild(load)
+
+                e.appendChild(saveLoadMenu)
+
+                const h2export = document.createElement('h2')
                 h2export.textContent = "Export Image"
+                h2export.className = "menubarLabel"
                 e.appendChild(h2export)
 
-                let exportSvg = document.createElement("button")
-                exportSvg.id = "exportSvg"
-                exportSvg.textContent = "Export Tree as SVG"
+                const exportSvg = View.ButtonItem(
+                    {
+                        id: "exportSvg",
+                        textContent: "Export Tree as SVG",
+                    }
+                )
                 e.appendChild(exportSvg)
 
-                let exportPng = document.createElement("button")
-                exportPng.id = "exportPng"
-                exportPng.textContent = "Export Tree as PNG"
+                const exportPng = View.ButtonItem(
+                    {
+                        id: "exportPng",
+                        textContent: "Export Tree as PNG",
+                    }
+                )
                 e.appendChild(exportPng)
 
-                let h2 = document.createElement("h2")
+                const h2 = document.createElement("h2")
                 h2.textContent = "Exported Image Alt Text"
+                h2.className = "menubarLabel"
                 e.appendChild(h2)
 
-                let alt = document.createElement("textarea")
+                const alt = document.createElement("textarea")
                 alt.id = "altText"
                 alt.rows = 6
                 alt.addEventListener('click', function(e) { this.select() } )
                 e.appendChild(alt)
 
-            document.body.appendChild(e)
-            this.render(d)
+            return e
         },
 
         render(d) {
@@ -533,4 +550,19 @@ class View {
 
     }
 
+    static RightPanel = {
+        init(d) {
+            const e = document.createElement("div")
+            e.id = "rightPanel"
+            
+            e.appendChild( View.Summary.init(d) )
+            e.appendChild( View.File.init(d) )
+            document.body.appendChild(e)
+        },
+
+        render(d) {
+            View.Summary.render(d)
+            View.File.render(d)
+        }
+    }
 }
