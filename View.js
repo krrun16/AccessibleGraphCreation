@@ -228,13 +228,15 @@ class View {
                 c.setAttribute("cx", coord.x )
                 c.setAttribute("cy", coord.y )
                 c.setAttribute("r", diameter)
-                c.setAttribute("stroke", "darkblue")
                 c.setAttribute("stroke-width", `${strokeWidth}%`)
                 if (node === d.interface.current) {
-                    c.setAttribute("fill", "yellow")
+                    c.setAttribute("fill", "url(#currentNodeGradient")
+                    c.setAttribute("stroke", "#00040a")
+                    c.setAttribute("class", "currentNode")
                 }
                 else {
-                    c.setAttribute("fill", "lightblue")
+                    c.setAttribute("fill", "url(#nodeGradient)")
+                    c.setAttribute("stroke", "#2f67ba")
                 }
                 svg.appendChild(c)
             }
@@ -257,6 +259,7 @@ class View {
                     Math.round(coord.y + diameter/2)
                 )
                 text.setAttribute("text-anchor", "middle")
+                text.setAttribute("fill", "white")
                 text.textContent = node.name
                 svg.appendChild(text)
 
@@ -311,10 +314,47 @@ class View {
             document.getElementById("svg")?.remove()
 
             // create a new svg element to hold all the circles, lines, and text
-            let svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
             svg.id = "svg"
             // hide the image from screenreaders as the rest of our document contains the same information and is more accessible
             svg.setAttribute("aria-hidden", "true")
+
+            // create gradients
+
+            const nodeGradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient")
+            nodeGradient.setAttribute("id", "nodeGradient")
+            nodeGradient.setAttribute("gradientTransform", "rotate(90)")
+                const stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop")
+                stop1.setAttribute("offset", "0%")
+                stop1.setAttribute("stop-color", "#7ca3e0")
+                nodeGradient.appendChild(stop1)
+
+                const stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop")
+                stop2.setAttribute("offset", "100%")
+                stop2.setAttribute("stop-color", "#2c64b8")
+                nodeGradient.appendChild(stop2)
+                
+            svg.appendChild(
+                nodeGradient
+            )
+
+            const currentNodeGradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient")
+            currentNodeGradient.setAttribute("id", "currentNodeGradient")
+            currentNodeGradient.setAttribute("gradientTransform", "rotate(90)")
+
+                const stop3 = document.createElementNS("http://www.w3.org/2000/svg", "stop")
+                stop3.setAttribute("offset", "0%")
+                stop3.setAttribute("stop-color", "#002867")
+                currentNodeGradient.appendChild(stop3)
+
+                const stop4 = document.createElementNS("http://www.w3.org/2000/svg", "stop")
+                stop4.setAttribute("offset", "100%")
+                stop4.setAttribute("stop-color", "#00040a")
+                currentNodeGradient.appendChild(stop4)
+
+            svg.appendChild(
+                currentNodeGradient
+            )
 
             // set alt text attributes
             let title = document.createElementNS("http://www.w3.org/2000/svg", "title")

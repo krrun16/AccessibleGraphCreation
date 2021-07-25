@@ -1,10 +1,10 @@
 * {
     box-sizing: border-box;
     font-family: "Segoe UI", "Helvetica", sans-serif;
+    font-size: 14px;
 }
 
 body {
-    font-size: 10pt;
     display: flex;
     flex-flow: wrap;
     background: white;
@@ -13,7 +13,6 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
     margin: 0;
-    font-size: inherit;
 }
 
 .window {
@@ -74,13 +73,12 @@ ol li:not(:last-child) {
 
 .menubarLabel {
     padding-left: 10px;
-    font-size: inherit;
     margin-top: 10px;
     margin-bottom: 5px;
+    text-shadow: 0 1px rgba(255, 255, 255, 0.5);
 }
 
 .menubarItem {
-    font-size: inherit;
     width: 100%;
     text-align: left;
     padding: 3px 20px 3px 30px;
@@ -251,13 +249,17 @@ textarea:focus {
     user-select: none;
 }
 
-.node {
-    cursor: pointer;
-}
+    .node {
+        cursor: pointer;
+    }
 
-#svg:active {
-    cursor: grabbing;
-}
+    #svg:active {
+        cursor: grabbing;
+    }
+
+    .currentNode {
+        filter: drop-shadow( 0 1px 2px black );
+    }
 
 .window li {
     list-style: none;
