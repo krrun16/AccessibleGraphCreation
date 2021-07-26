@@ -202,7 +202,7 @@ class View {
                 const width = document.getElementById("treeContainer").getBoundingClientRect().x
                 // miimum spread
                 let s = {}
-                const maximumChildren = 2
+                const maximumChildren = d.tree.arity
 
                 // base case: this is the head
                 if (depth === 0) {
