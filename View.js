@@ -135,7 +135,7 @@ class View {
                     spinner.min = 1
                     spinner.max = 16
                     spinner.step = 1
-                    spinner.value = 3
+                    spinner.value = d.tree.arity
                     treePropertiesContainer.appendChild(spinner)
 
                     const span2 = document.createElement('span')
@@ -278,6 +278,7 @@ class View {
                 // draw name of this node
                 let text = document.createElementNS("http://www.w3.org/2000/svg", "text")
                 text.setAttribute("font-size", fontSize)
+                text.setAttribute("font-family", "Segoe UI, Helvetica, Sans-Serif")
                 text.setAttribute(
                     "x",
                     Math.round(coord.x)
