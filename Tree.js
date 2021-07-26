@@ -1,6 +1,6 @@
 class Tree {
     constructor() {
-        this.arity = 4
+        this.arity = 2
         this.head = null
         return this
     }

@@ -188,7 +188,7 @@ class View {
             // set constants
             const diameter = 10
             // minimum margin
-            const horizontalMargin = 25
+            const horizontalMargin = diameter*2/d.tree.arity + 1
             const verticalMargin = 25
 
             
