@@ -135,7 +135,7 @@ class View {
                     spinner.min = 1
                     spinner.max = 16
                     spinner.step = 1
-                    spinner.value = 2
+                    spinner.value = 3
                     treePropertiesContainer.appendChild(spinner)
 
                     const span2 = document.createElement('span')
@@ -158,9 +158,11 @@ class View {
                 t.textContent = a.textContent
                 if (a.isEnabled) {
                     t.classList.remove("disabled")
+                    t.removeAttribute("disabled")
                 }
                 else {
                     t.classList.add("disabled")
+                    t.setAttribute("disabled", "true")
                 }
             }
         }

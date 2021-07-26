@@ -9,8 +9,7 @@ class Controller {
 
     static bindEvents(e) {
         document.getElementById("asHead").addEventListener("click", Controller.addNodeHead)
-        document.getElementById("asLeft").addEventListener("click", Controller.addNodeLeftChild)
-        document.getElementById("asRight").addEventListener("click", Controller.addNodeRightChild)
+        Controller.bindArityEvents(e)
         document.getElementById("removeNode").addEventListener("click", Controller.removeNode)
         document.getElementById("renameNode").addEventListener("click", Controller.renameNode)
         document.getElementById("moveUp").addEventListener("click", Controller.moveUp)
@@ -23,6 +22,31 @@ class Controller {
         document.getElementById("loadDummy").addEventListener('click', Controller.load)
         document.getElementById("load").addEventListener('change', Controller.upload)
         document.getElementById("exportSvg").addEventListener('click', Controller.exportSvg)
+    }
+
+    static bindArityEvents(e) {
+        const d = Model.getData()
+        if ( d.tree.arity === 2 ) {
+            document.getElementById("asLeft").addEventListener("click", Controller.addNodeLeftChild)
+            document.getElementById("asRight").addEventListener("click", Controller.addNodeRightChild)
+        }
+        else {
+            for (let i=0; i<d.tree.arity; i++) {
+                document.getElementById(`as${Model.numberSuffix(i)}`).addEventListener(
+                    "click",
+                    Controller.addNodeNthChild(i)
+                )
+            }
+        }
+    }
+
+    // function factory
+    static addNodeNthChild(i) {
+        return function(e) {
+            Model.addNodeNthChild(i)
+            View.render( Model.getData() )
+            e.preventDefault()
+        }
     }
 
     static changeArity(e) {

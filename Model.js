@@ -76,6 +76,23 @@ class Model {
         ]
     }
 
+    static numberSuffix(number) {
+        const suffixes = [
+            'th',
+            'st',
+            'nd',
+            'rd',
+            'th',
+            'th',
+            'th',
+            'th',
+            'th',
+            'th',
+        ]
+        return number + suffixes[ number % 10 ]
+    }
+
+
     static getActions() {
         class Action {
             constructor(id, textContent, isEnabled) {
@@ -85,12 +102,36 @@ class Model {
             }
         }
 
+        let add = [
+            new Action("asHead", "Head to Tree", !!!this.tree.head),
+        ]
+
+        if (this.tree.arity===2) {
+            add = add.concat(
+                [
+                    new Action("asHead", "Head to Tree", !!!this.tree.head),
+                    new Action("asLeft", `Left Child`, this.canAddLeftChild()),
+                    new Action("asRight", `Right Child`, this.canAddRightChild()),
+                ]
+            )
+        }
+        else if (this.tree.arity === 1 || this.tree.arity > 2) {
+            for (let i=0; i<this.tree.arity; i++) {
+                add.push(
+                    new Action(
+                        `as${Model.numberSuffix(i)}`,
+                        `As ${Model.numberSuffix(i)} Child`,
+                        this.canAddChild(i),
+                    )
+                )
+            }
+        }
+        else {
+            throw new Error("Invalid arity")
+        }
+
         return {
-            add: [
-                new Action("asHead", "Head to Tree", !!!this.tree.head),
-                new Action("asLeft", `Left Child`, this.canAddLeftChild()),
-                new Action("asRight", `Right Child`, this.canAddRightChild()),
-            ],
+            add: add,
             edit: [
                 new Action("removeNode", `Remove`, !!this.interface.current),
                 new Action("renameNode", `Rename`, !!this.interface.current),
