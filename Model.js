@@ -109,7 +109,6 @@ class Model {
         if (this.tree.arity===2) {
             add = add.concat(
                 [
-                    new Action("asHead", "Head to Tree", !!!this.tree.head),
                     new Action("asLeft", `Left Child`, this.canAddLeftChild()),
                     new Action("asRight", `Right Child`, this.canAddRightChild()),
                 ]
