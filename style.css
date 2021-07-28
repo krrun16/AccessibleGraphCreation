@@ -95,6 +95,7 @@ ol li:not(:last-child) {
     font-weight: 500;
     border: solid transparent 1px;
     border-left: none;
+    display: flex;
 }
 
     .menubarItem.disabled {
@@ -105,6 +106,16 @@ ol li:not(:last-child) {
         border: solid rgb(16, 80, 143) 1px;
         border-left: none;
         background: linear-gradient(dodgerblue, rgb(16, 80, 143));
+        color: white;
+    }
+
+    .shortcut {
+        flex-grow: 1;
+        text-align: right;
+        color: gray;
+    }
+    
+    .menubarItem:not(.disabled):hover .shortcut {
         color: white;
     }
 

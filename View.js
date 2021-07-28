@@ -74,12 +74,21 @@ class View {
     }
 
     static ButtonItem(action) {
-        let li = document.createElement('li')
-        let button = document.createElement('button')
-        button.textContent = action.textContent
+        const li = document.createElement('li')
+        const button = document.createElement('button')
         button.href = "#"
         button.className = "menubarItem"
         button.id = action.id
+        
+        const t = document.createElement("span")
+        t.textContent = action.textContent
+        button.appendChild(t)
+        
+        const shortcut = document.createElement("span")
+        shortcut.className = "shortcut"
+        shortcut.textContent = action.shortcut
+        button.appendChild(shortcut)
+        
         li.appendChild(button)
         return li
     }
@@ -96,19 +105,18 @@ class View {
         return tr
     }
 
+    static populateMenu(menuId, actions, labeledBy) {
+        const menu = document.createElement('ol')
+        menu.setAttribute("aria-labelledby", labeledBy)
+        menu.id = menuId
+        actions.map(
+            action => menu.appendChild( View.ButtonItem(action) )
+        )
+        return menu
+    }
+
     static Edit = {
         init(d) {
-
-            function populateMenu(menuId, actions, labeledBy) {
-                const menu = document.createElement('ol')
-                menu.setAttribute("aria-labelledby", labeledBy)
-                menu.id = menuId
-                actions.map(
-                    action => menu.appendChild( View.ButtonItem(action) )
-                )
-                return menu
-            }
-
 
             let e = document.createElement("div")
             e.classList.add("window")
@@ -124,21 +132,21 @@ class View {
                 addLabel.textContent = "Add"
                 addLabel.className = "menubarLabel"
                 e.appendChild(addLabel)
-                e.appendChild( populateMenu("addMenu", d.view.actions.add, "addLabel") )
+                e.appendChild( View.populateMenu("addMenu", d.view.actions.add, "addLabel") )
 
                 const editLabel = document.createElement('h2')
                 editLabel.id = "editLabel"
                 editLabel.textContent = "Edit"
                 editLabel.className = "menubarLabel"
                 e.appendChild(editLabel)
-                e.appendChild( populateMenu("editMenu", d.view.actions.edit, "editLabel") )
+                e.appendChild( View.populateMenu("editMenu", d.view.actions.edit, "editLabel") )
 
                 const moveLabel = document.createElement('h2')
                 moveLabel.id = "moveLabel"
-                moveLabel.textContent = "Move"
+                moveLabel.textContent = "Move To"
                 moveLabel.className = "menubarLabel"
                 e.appendChild(moveLabel)
-                e.appendChild( populateMenu("moveMenu", d.view.actions.move, "moveLabel") )
+                e.appendChild( View.populateMenu("moveMenu", d.view.actions.move, "moveLabel") )
 
                 const treePropertiesLabel = document.createElement('h2')
                 treePropertiesLabel.id = "treePropertiesLabel"
@@ -179,7 +187,6 @@ class View {
             .concat(d.view.actions.move)
             for (let a of actions) {
                 const t = document.getElementById(a.id)
-                t.textContent = a.textContent
                 if (a.isEnabled) {
                     t.classList.remove("disabled")
                     t.removeAttribute("disabled")
@@ -536,31 +543,12 @@ class View {
                 saveAndLoadLabel.className = "menubarLabel"
                 e.appendChild(saveAndLoadLabel)
 
-                const saveLoadMenu = document.createElement('ol')
-                saveLoadMenu.setAttribute("aria-labeledby", "saveAndLoadLabel")
-
-                    const save = View.ButtonItem(
-                        {
-                            id: "save",
-                            textContent: "Save Tree to File",
-                        }
-                    )
-                    saveLoadMenu.appendChild(save)
-
-                    const loadDummy = View.ButtonItem(
-                        {
-                            id: "loadDummy",
-                            textContent: "Load Tree from File...",
-                        }
-                    )
-                    saveLoadMenu.appendChild(loadDummy)
-
+                const saveLoadMenu = View.populateMenu("saveLoadMenu", d.view.actions.saveLoad, saveAndLoadLabel)
                     const load = document.createElement("input")
                     load.type = "file"
                     load.id = "load"
                     load.style.display = "none"
                     saveLoadMenu.appendChild(load)
-
                 e.appendChild(saveLoadMenu)
 
                 const h2export = document.createElement('h2')
@@ -568,32 +556,11 @@ class View {
                 h2export.className = "menubarLabel"
                 e.appendChild(h2export)
 
-                const exportSvg = View.ButtonItem(
-                    {
-                        id: "exportSvg",
-                        textContent: "Export Tree as SVG",
-                    }
-                )
-                e.appendChild(exportSvg)
-
-                const exportPng = View.ButtonItem(
-                    {
-                        id: "exportPng",
-                        textContent: "Export Tree as PNG",
-                    }
-                )
-                e.appendChild(exportPng)
-
-                const exportHtml = View.ButtonItem(
-                    {
-                        id: "exportHtml",
-                        textContent: "Export Tree as HTML",
-                    }
-                )
-                e.appendChild(exportHtml)
+                const exportMenu = View.populateMenu("exportMenu", d.view.actions.export, h2export)
+                e.appendChild(exportMenu)
 
                 const h2 = document.createElement("h2")
-                h2.textContent = "Exported Image Short Alt Text"
+                h2.textContent = "Exported Image Alt Text"
                 h2.className = "menubarLabel"
                 e.appendChild(h2)
 
@@ -605,7 +572,7 @@ class View {
                 e.appendChild(alt)
 
                 const longAltTextLabel = document.createElement("h2")
-                longAltTextLabel.textContent = "Exported Image Long Alt Text"
+                longAltTextLabel.textContent = "Extended Alt Text"
                 longAltTextLabel.className = "menubarLabel"
                 e.appendChild(longAltTextLabel)
                 const longAlt = document.createElement("textarea")

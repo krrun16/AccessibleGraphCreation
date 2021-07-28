@@ -23,6 +23,12 @@ class Controller {
         document.getElementById("loadDummy").addEventListener('click', Controller.load)
         document.getElementById("load").addEventListener('change', Controller.upload)
         document.getElementById("exportSvg").addEventListener('click', Controller.exportSvg)
+        document.body.addEventListener('keydown', Controller.keydown)
+    }
+
+    static keydown(e) {
+        console.log(e.key)
+        const d = Model.getData()
     }
 
     static bindArityEvents(e) {
@@ -124,17 +130,21 @@ class Controller {
 
     static renameNode(e) {
         const d = Model.getData()
+        const maxLength = 2
         if (d.interface.current) {
             const newName = window.prompt(`New name for node ${d.interface.current.name}`, d.interface.current.name)
-            if (newName !== "") {
+            if (newName === "") {
+                window.alert("Cannot set this node's name to a blank name.")
+            }
+            else if (newName.length > maxLength) {
+                window.alert(`Cannot give this node a name longer than ${maxLength} characters.`)
+            }
+            else {
                 const response = Model.renameNode(newName)
                 if (!response) {
                     // node name did not update
                     window.alert(`Could not set this node's name to "${newName}", which is already in use.`)
                 }
-            }
-            else {
-                window.alert("Cannot set this node's name to a blank name.")
             }
             View.render( Model.getData() )
         }
@@ -158,12 +168,15 @@ class Controller {
     }
 
     static upload(e) {
+        console.log("Opening file...")
+
         const reader = new FileReader()
         reader.onload = Controller.readFile
         reader.readAsText( e.target.files[0] )
     }
 
     static readFile(e) {
+        console.log("Reading file...")
         try {
             Model.import( JSON.parse(e.target.result) )
         }

@@ -84,21 +84,6 @@ class Model {
         ]
     }
 
-    static getLongDescription() {
-        return this.tree.getNodes()
-        .map(
-            node => {
-                if (this.tree.head === node) {
-                    return `Head: ${node.name}. `
-                }
-                else {
-                    return `${node.name} has children ${this.tree.getChildren(node).join(", ")}.`
-                }
-            }
-        )
-        .join(" ")
-    }
-
     static numberSuffix(number) {
         const suffixes = [
             'th',
@@ -118,22 +103,23 @@ class Model {
 
     static getActions() {
         class Action {
-            constructor(id, textContent, isEnabled) {
+            constructor(id, textContent, isEnabled, shortcut) {
                 this.id = id
                 this.textContent = textContent
                 this.isEnabled = isEnabled
+                this.shortcut = shortcut
             }
         }
 
         let add = [
-            new Action("asHead", "Head to Tree", !!!this.tree.head),
+            new Action("asHead", "Head to Tree", !!!this.tree.head, "Shift+H"),
         ]
 
         if (this.tree.arity===2) {
             add = add.concat(
                 [
-                    new Action("asLeft", `Left Child`, this.canAddLeftChild()),
-                    new Action("asRight", `Right Child`, this.canAddRightChild()),
+                    new Action("asLeft", `Left Child`, this.canAddLeftChild(), "Shift+L"),
+                    new Action("asRight", `Right Child`, this.canAddRightChild(), "Shift+R"),
                 ]
             )
         }
@@ -159,11 +145,20 @@ class Model {
                 new Action("renameNode", `Rename`, !!this.interface.current),
             ],
             move: [
-                new Action("moveUp", `To Parent`, this.canMoveUp() ),
-                new Action("moveFirstChild", this.tree.arity===2 ? "To Left Child" : "To First Child", this.canMoveFirstChild() ),
-                new Action("moveLastChild", this.tree.arity===2 ? "To Right Child" : "To Last Child", this.canMoveLastChild() ),
-                new Action("moveLeft", `Left`, this.canMoveLeft() ),
-                new Action("moveRight", `Right`, this.canMoveRight() ),
+                new Action("moveUp", `Parent`, this.canMoveUp() ),
+                new Action("moveFirstChild", this.tree.arity===2 ? "Left Child" : "To First Child", this.canMoveFirstChild() ),
+                new Action("moveLastChild", this.tree.arity===2 ? "Right Child" : "To Last Child", this.canMoveLastChild() ),
+                new Action("moveLeft", `Left Sibling`, this.canMoveLeft() ),
+                new Action("moveRight", `Right Sibling`, this.canMoveRight() ),
+            ],
+            saveLoad: [
+                new Action("save", "Save Tree to File", true),
+                new Action("loadDummy", "Load Tree from File...", true),
+            ],
+            export: [
+                new Action("exportSvg", "Export Tree as SVG", true),
+                new Action("exportPng", "Export Tree as PNG", true),
+                new Action("exportHtml", "Export Tree as HTML", true),
             ]
         }
     }
@@ -256,7 +251,6 @@ class Model {
     }
 
     static import(json) {
-
         function buildTree(jsonHead, jsonParent, treeParent) {
             if (!jsonParent && !treeParent) {
                 // this is a new tree, add the head
