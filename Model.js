@@ -84,6 +84,21 @@ class Model {
         ]
     }
 
+    static getLongDescription() {
+        return this.tree.getNodes()
+        .map(
+            node => {
+                if (this.tree.head === node) {
+                    return `Head: ${node.name}. `
+                }
+                else {
+                    return `${node.name} has children ${this.tree.getChildren(node).join(", ")}.`
+                }
+            }
+        )
+        .join(" ")
+    }
+
     static numberSuffix(number) {
         const suffixes = [
             'th',

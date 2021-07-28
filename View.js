@@ -15,23 +15,47 @@ class View {
     }
 
     static getTitle(d) {
-        return `A circle-and-line diagram of a computer science tree data structure`
-    }
-
-    static getDesc(d) {
         const numberOfNodes = d.view.summary.find( item => item.id === "numberOfNodes").value
         const arity = d.view.summary.find( item => item.id === "arity").value
         const numberOfLeafNodes = d.view.summary.find( item => item.id === "numberOfLeafNodes").value
         const numberOfNonLeafNodes = d.view.summary.find( item => item.id === "numberOfNonLeafNodes").value
         const treeDepth = d.view.summary.find( item => item.id === "treeDepth").value
-
+        
         if (numberOfNodes === 0) {
-            return `An empty computer science tree data structure represented as a hierarchical diagram with circles for nodes and lines for edges.`
+            return `An empty computer science tree data structure with arity ${arity} represented as a hierarchical diagram with circles for nodes and lines for edges.`
         }
         else {
             return `A computer science tree data structure represented as a hierarchical diagram with circles for nodes and lines for edges. The tree has arity ${arity} and depth ${treeDepth}. There are ${numberOfNodes} nodes, ${numberOfLeafNodes} of which are leaf nodes and ${numberOfNonLeafNodes} of which are non-leaf nodes.`
         }
     }
+
+    static getDesc(d) {
+        return d.tree.getNodes()
+        .map(
+            node => {
+                let string = ""
+                if (d.tree.head === node) {
+                    string = `Head: ${node.name}. `
+                }
+                const children = d.tree.getChildren(node)
+                let childrenString
+                if (children.length) {
+                    childrenString = d.tree.getChildren(node)
+                    .map(
+                        (child, index) => `child ${index+1} is ${child.name}`
+                    )
+                    .join(", ")
+                    string += `${node.name} has ${children.length} children: ${childrenString}.`
+                }
+                else {
+                    string += `${node.name} has no children.`
+                }
+                return string
+            }
+        )
+        .join(" ")
+    }
+
 
     static exportSvg(d) {
         const svg = document.getElementById('svg')
@@ -569,7 +593,7 @@ class View {
                 e.appendChild(exportHtml)
 
                 const h2 = document.createElement("h2")
-                h2.textContent = "Exported Image Alt Text"
+                h2.textContent = "Exported Image Short Alt Text"
                 h2.className = "menubarLabel"
                 e.appendChild(h2)
 
@@ -577,13 +601,26 @@ class View {
                 alt.id = "altText"
                 alt.rows = 6
                 alt.addEventListener('click', function(e) { this.select() } )
+                alt.textContent = View.getTitle(d)
                 e.appendChild(alt)
+
+                const longAltTextLabel = document.createElement("h2")
+                longAltTextLabel.textContent = "Exported Image Long Alt Text"
+                longAltTextLabel.className = "menubarLabel"
+                e.appendChild(longAltTextLabel)
+                const longAlt = document.createElement("textarea")
+                longAlt.id = "longAltText"
+                longAlt.rows = 6
+                longAlt.addEventListener('click', function(e) { this.select() } )
+                longAlt.textContent = View.getDesc(d)
+                e.appendChild(longAlt)
 
             return e
         },
 
         render(d) {
-            document.getElementById("altText").textContent = View.getDesc(d)
+            document.getElementById("altText").textContent = View.getTitle(d)
+            document.getElementById("longAltText").textContent = View.getDesc(d)
         }
 
     }
