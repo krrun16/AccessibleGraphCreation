@@ -119,7 +119,7 @@ class Model {
                 add.push(
                     new Action(
                         `as${Model.numberSuffix(i)}`,
-                        `As ${Model.numberSuffix(i)} Child`,
+                        `As ${Model.numberSuffix(i+1)} Child`,
                         this.canAddChild(i),
                     )
                 )
