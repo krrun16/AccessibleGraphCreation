@@ -163,11 +163,20 @@ class Tree {
 
     getFirstChild(n) {
         if (n) {
-            for (let c of n.children) {
-                if (c) {
-                    return c
-                }
-            }
+            return n.children.find(
+                c => !!c
+            )
+        }
+        else {
+            throw new Error("Node has no children")
+        }
+    }
+
+    getLastChild(n) {
+        if (n) {
+            return n.children.reverse().find(
+                c => !!c
+            )
         }
         else {
             throw new Error("Node has no children")

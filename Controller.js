@@ -13,7 +13,7 @@ class Controller {
         document.getElementById("removeNode").addEventListener("click", Controller.removeNode)
         document.getElementById("renameNode").addEventListener("click", Controller.renameNode)
         document.getElementById("moveUp").addEventListener("click", Controller.moveUp)
-        document.getElementById("moveDown").addEventListener("click", Controller.moveDown)
+        document.getElementById("moveFirstChild").addEventListener("click", Controller.moveFirstChild)
         document.getElementById("moveLeft").addEventListener("click", Controller.moveLeft)
         document.getElementById("moveRight").addEventListener("click", Controller.moveRight)
         document.getElementById('arity').addEventListener('change', Controller.changeArity)
@@ -79,7 +79,7 @@ class Controller {
         e.preventDefault()
     }
 
-    static moveDown(e) {
+    static moveFirstChild(e) {
         Model.move("down")
         View.render( Model.getData() )
         e.preventDefault()
