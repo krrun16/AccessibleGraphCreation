@@ -27,8 +27,28 @@ class Controller {
     }
 
     static keydown(e) {
-        console.log(e.key)
+        // get all keyboard shortcuts
         const d = Model.getData()
+        let actions = []
+        for (let a in d.view.actions) {
+            actions.push( d.view.actions[a] )
+        }
+        actions = actions.flat()
+        
+        // find the action with this keyboard shortcut, if any
+        const target = actions.find(
+            a => {
+                for (let p in a.shortcut) {
+                    if ( a.shortcut[p] !== e[p] )
+                    return false
+                }
+                return true
+            }
+        )
+        if (target) {
+            document.getElementById(target.id).click()
+        }
+
     }
 
     static bindArityEvents(e) {

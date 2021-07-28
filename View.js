@@ -86,7 +86,7 @@ class View {
         
         const shortcut = document.createElement("span")
         shortcut.className = "shortcut"
-        shortcut.textContent = action.shortcut
+        shortcut.textContent = action.shortcutName
         button.appendChild(shortcut)
         
         li.appendChild(button)

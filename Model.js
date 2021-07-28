@@ -108,18 +108,34 @@ class Model {
                 this.textContent = textContent
                 this.isEnabled = isEnabled
                 this.shortcut = shortcut
+                this.shortcutName = Action.translateShortcut(shortcut)
+            }
+            static translateShortcut(shortcut) {
+                if (shortcut) {
+                    let key
+                    if (shortcut.code.substr(0, 3) === "Key" || shortcut.code.substr(0, 5) === "Digit") {
+                        key = shortcut.code.substr(-1)
+                    }
+                    else if (shortcut.code.substr(0, 5) === "Arrow") {
+                        key = shortcut.code.split("Arrow")[1]
+                    }
+                    return `${shortcut.shiftKey ? "Shift+" : ""}${key}`
+                }
+                else {
+                    return ""
+                }
             }
         }
 
         let add = [
-            new Action("asHead", "Head to Tree", !!!this.tree.head, "Shift+H"),
+            new Action("asHead", "Head to Tree", !!!this.tree.head, {shiftKey: true, code: "KeyH"}),
         ]
 
         if (this.tree.arity===2) {
             add = add.concat(
                 [
-                    new Action("asLeft", `Left Child`, this.canAddLeftChild(), "Shift+1"),
-                    new Action("asRight", `Right Child`, this.canAddRightChild(), "Shift+2"),
+                    new Action("asLeft", `Left Child`, this.canAddLeftChild(), {shiftKey: true, code: "Digit1"}),
+                    new Action("asRight", `Right Child`, this.canAddRightChild(),{shiftKey: true, code: "Digit2"}),
                 ]
             )
         }
@@ -130,7 +146,7 @@ class Model {
                         `as${Model.numberSuffix(i)}`,
                         `As ${Model.numberSuffix(i+1)} Child`,
                         this.canAddChild(i),
-                        i+1<10 ? `Shift+${i+1}` : ""
+                        {shiftKey: true, code: `Digit${i+1}`}
                     )
                 )
             }
@@ -142,24 +158,24 @@ class Model {
         return {
             add: add,
             edit: [
-                new Action("removeNode", `Remove`, !!this.interface.current, "Shift+D"),
-                new Action("renameNode", `Rename`, !!this.interface.current, "Shift+N"),
+                new Action("removeNode", `Remove`, !!this.interface.current, {shiftKey: true, code: "KeyD"}),
+                new Action("renameNode", `Rename`, !!this.interface.current, {shiftKey: true, code: "KeyN"}),
             ],
             move: [
-                new Action("moveUp", `Parent`, this.canMoveUp() ),
-                new Action("moveFirstChild", this.tree.arity===2 ? "Left Child" : "To First Child", this.canMoveFirstChild(), "Shift+Down" ),
-                new Action("moveLastChild", this.tree.arity===2 ? "Right Child" : "To Last Child", this.canMoveLastChild(), "Shift+C" ),
-                new Action("moveLeft", `Left Sibling`, this.canMoveLeft(), "Left" ),
-                new Action("moveRight", `Right Sibling`, this.canMoveRight(), "Right" ),
+                new Action("moveUp", `Parent`, this.canMoveUp(), {shiftKey: false, code: "ArrowUp"} ),
+                new Action("moveFirstChild", this.tree.arity===2 ? "Left Child" : "To First Child", this.canMoveFirstChild(), {shiftKey: false, code: "ArrowDown"} ),
+                new Action("moveLastChild", this.tree.arity===2 ? "Right Child" : "To Last Child", this.canMoveLastChild(), {shiftKey: true, code: "ArrowDown"} ),
+                new Action("moveLeft", `Left Sibling`, this.canMoveLeft(), {shiftKey: false, code: "ArrowLeft"} ),
+                new Action("moveRight", `Right Sibling`, this.canMoveRight(), {shiftKey: false, code: "ArrowRight"} ),
             ],
             saveLoad: [
-                new Action("save", "Save Tree to File", true, "Shift+S"),
-                new Action("loadDummy", "Load Tree from File...", true, "Shift+O"),
+                new Action("save", "Save Tree to File", true, {shiftKey: true, code: "KeyS"}),
+                new Action("loadDummy", "Load Tree from File...", true, {shiftKey: true, code: "KeyO"}),
             ],
             export: [
-                new Action("exportSvg", "Export Tree as SVG", true, "Shift+V"),
-                new Action("exportPng", "Export Tree as PNG", true, "Shift+P"),
-                new Action("exportHtml", "Export Tree as HTML", true, "Shift+W"),
+                new Action("exportSvg", "Export Tree as SVG", true, {shiftKey: true, code: "KeyV"}),
+                new Action("exportPng", "Export Tree as PNG", true, {shiftKey: true, code: "KeyP"}),
+                new Action("exportHtml", "Export Tree as HTML", true, {shiftKey: true, code: "KeyW"}),
             ]
         }
     }
