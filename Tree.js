@@ -1,6 +1,6 @@
 class Tree {
     constructor() {
-        this.arity = 3
+        this.arity = 2
         this.head = null
         return this
     }
@@ -174,7 +174,7 @@ class Tree {
 
     getLastChild(n) {
         if (n) {
-            return n.children.reverse().find(
+            return n.children.slice().reverse().find(
                 c => !!c
             )
         }
@@ -287,13 +287,11 @@ class Tree {
             throw new Error("Cannot add new node in a non-empty position")
         }
         else {
-            let n
+            const n = new TreeNode(name)
             if (this.head === null) {
-                n = new TreeNode(name)
                 this.head = n
             }
             else {
-                n = new TreeNode(name)
                 parent.children[position] = n
             }
             return n

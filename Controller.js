@@ -14,6 +14,7 @@ class Controller {
         document.getElementById("renameNode").addEventListener("click", Controller.renameNode)
         document.getElementById("moveUp").addEventListener("click", Controller.moveUp)
         document.getElementById("moveFirstChild").addEventListener("click", Controller.moveFirstChild)
+        document.getElementById("moveLastChild").addEventListener("click", Controller.moveLastChild)
         document.getElementById("moveLeft").addEventListener("click", Controller.moveLeft)
         document.getElementById("moveRight").addEventListener("click", Controller.moveRight)
         document.getElementById('arity').addEventListener('change', Controller.changeArity)
@@ -80,7 +81,13 @@ class Controller {
     }
 
     static moveFirstChild(e) {
-        Model.move("down")
+        Model.move("firstChild")
+        View.render( Model.getData() )
+        e.preventDefault()
+    }
+
+    static moveLastChild(e) {
+        Model.move("lastChild")
         View.render( Model.getData() )
         e.preventDefault()
     }

@@ -51,7 +51,7 @@ class Model {
     }
 
     static canMoveLastChild() {
-
+        return this.interface.current && this.tree.getLastChild(this.interface.current)
     }
 
     static canAddLeftChild() {
@@ -145,8 +145,8 @@ class Model {
             ],
             move: [
                 new Action("moveUp", `To Parent`, this.canMoveUp() ),
-                new Action("moveFirstChild", `To First Child`, this.canMoveFirstChild() ),
-                new Action("moveLastChild", "To Last Child", this.canMoveLastChild() ),
+                new Action("moveFirstChild", this.tree.arity===2 ? "To Left Child" : "To First Child", this.canMoveFirstChild() ),
+                new Action("moveLastChild", this.tree.arity===2 ? "To Right Child" : "To Last Child", this.canMoveLastChild() ),
                 new Action("moveLeft", `Left`, this.canMoveLeft() ),
                 new Action("moveRight", `Right`, this.canMoveRight() ),
             ]
@@ -164,9 +164,14 @@ class Model {
                 this.interface.current = this.tree.getParent(this.interface.current)
             }
         }
-        else if (d === "down") {
+        else if (d === "firstChild") {
             if ( this.canMoveFirstChild() ) {
                 this.interface.current = this.tree.getFirstChild(this.interface.current)
+            }
+        }
+        else if (d === "lastChild") {
+            if ( this.canMoveLastChild() ) {
+                this.interface.current = this.tree.getLastChild(this.interface.current)
             }
         }
         else if (d === "left") {
