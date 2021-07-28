@@ -199,7 +199,9 @@ class Model {
 
     static renameNode(name) {
         if (this.interface.current) {
-            return this.tree.renameNode(this.interface.current, name)
+            if (name !== "") {
+                return this.tree.renameNode(this.interface.current, name)
+            }
         }
     }
 

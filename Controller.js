@@ -119,10 +119,15 @@ class Controller {
         const d = Model.getData()
         if (d.interface.current) {
             const newName = window.prompt(`New name for node ${d.interface.current.name}`, d.interface.current.name)
-            const response = Model.renameNode(newName)
-            if (!response) {
-                // node name did not update
-                window.alert(`Could not set this node's name to "${newName}", which is already in use.`)
+            if (newName !== "") {
+                const response = Model.renameNode(newName)
+                if (!response) {
+                    // node name did not update
+                    window.alert(`Could not set this node's name to "${newName}", which is already in use.`)
+                }
+            }
+            else {
+                window.alert("Cannot set this node's name to a blank name.")
             }
             View.render( Model.getData() )
         }
