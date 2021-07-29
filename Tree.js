@@ -301,7 +301,7 @@ class Tree {
             throw new Error("Cannot add new node in a non-empty position")
         }
         else {
-            const n = new TreeNode(name)
+            const n = new TreeNode(name, this.arity)
             if (this.head === null) {
                 this.head = n
             }

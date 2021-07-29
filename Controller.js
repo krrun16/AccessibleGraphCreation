@@ -23,6 +23,7 @@ class Controller {
         document.getElementById("loadDummy").addEventListener('click', Controller.load)
         document.getElementById("load").addEventListener('change', Controller.upload)
         document.getElementById("exportSvg").addEventListener('click', Controller.exportSvg)
+        document.getElementById("exportHtml").addEventListener('click', Controller.exportHtml)
         document.body.addEventListener('keydown', Controller.keydown)
     }
 
@@ -218,7 +219,8 @@ class Controller {
     }
 
     static exportHtml(e) {
-        
+        const html = Model.exportHtml()
+        Controller.download(html, `Tree (${new Date()}).html`)
     }
 
 }

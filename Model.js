@@ -312,6 +312,37 @@ class Model {
     }
 
     static exportHtml() {
+        function generateList(parent) {
+            if (!parent) {
+                const ul = document.createElement('ul')
+                if (Model.tree.head) {
+                    const li = document.createElement('li')
+                        li.textContent = Model.tree.head.name
+                        li.appendChild( generateList(Model.tree.head) )
+                    ul.appendChild(li)
+                }
+                return ul
+            }
+
+            else {
+                const ul = document.createElement('ul')
+                for ( let c of parent.children ) {
+                    const li = document.createElement('li')
+                    if (c) {
+                        li.textContent = c.name
+                        li.appendChild(
+                            generateList(c)
+                        )
+                    }
+                    else {
+                        li.textContent = "no node"
+                    }
+                    ul.appendChild(li)
+                }
+                return ul
+            }
+        }
+
         const html = document.createElement("html")
         html.setAttribute("lang", "en")
             const head = document.createElement("head")
@@ -322,10 +353,24 @@ class Model {
                 const meta = document.createElement("meta")
                 meta.setAttribute("charset", "utf-8")
                 head.appendChild(meta)
+
+                const style = document.createElement("style")
+                style.textContent = `
+                    li {
+                        list-style: none;
+                    }
+                `
+                head.appendChild(style)
             html.appendChild(head)
 
             const body = document.createElement("body")
-                
+                body.appendChild( generateList() )
+        html.appendChild(body)
+
+        const serializer = new XMLSerializer()
+        const escaped = serializer.serializeToString(html)
+        const prefix = "data:text/html;charset=utf-8,"
+        return prefix + encodeURIComponent(escaped)
     }
 
     static import(json) {
