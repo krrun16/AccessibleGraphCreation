@@ -163,8 +163,8 @@ class Model {
             ],
             move: [
                 new Action("moveUp", `Parent`, this.canMoveUp(), {shiftKey: false, code: "ArrowUp"} ),
-                new Action("moveFirstChild", this.tree.arity===2 ? "Left Child" : "To First Child", this.canMoveFirstChild(), {shiftKey: false, code: "ArrowDown"} ),
-                new Action("moveLastChild", this.tree.arity===2 ? "Right Child" : "To Last Child", this.canMoveLastChild(), {shiftKey: true, code: "ArrowDown"} ),
+                new Action("moveFirstChild", "To First Child", this.canMoveFirstChild(), {shiftKey: false, code: "ArrowDown"} ),
+                new Action("moveLastChild", "To Last Child", this.canMoveLastChild(), {shiftKey: true, code: "ArrowDown"} ),
                 new Action("moveLeft", `Left Sibling`, this.canMoveLeft(), {shiftKey: false, code: "ArrowLeft"} ),
                 new Action("moveRight", `Right Sibling`, this.canMoveRight(), {shiftKey: false, code: "ArrowRight"} ),
             ],

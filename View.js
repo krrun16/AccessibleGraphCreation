@@ -253,7 +253,7 @@ class View {
                     const depth = d.tree.getDepth(node)
                     const depthMult = maxDepth - depth + 1
                     const spread = horizontalMargin * (maximumChildren-1) * Math.pow(maximumChildren, depthMult)
-                    const step = spread/(maximumChildren-1)
+                    const step = spread/(maximumChildren-1) || 0
                     // console.log("depthMult: ", depthMult)
                     // console.log("depth: ", depth)
                     // console.log("spread: ", spread)
@@ -268,10 +268,10 @@ class View {
                         depth * (diameter+verticalMargin) + diameter/2
                     )
                     // let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect")
-                    // rect.setAttribute("x", p.x + 0*step - spread/2)
-                    // rect.setAttribute("y", depth*(diameter+margin)+diameter/2)
+                    // rect.setAttribute("x", p.x)
+                    // rect.setAttribute("y", p.y)
                     // rect.setAttribute("width", spread)
-                    // rect.setAttribute("height", (depth+1)*(diameter)+diameter/2)
+                    // rect.setAttribute("height", diameter)
                     // rect.setAttribute("stroke", "orange")
                     // rect.setAttribute("fill", "none")
                     // svg.appendChild(rect)
