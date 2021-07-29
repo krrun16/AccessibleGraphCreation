@@ -314,7 +314,7 @@ class Model {
     static exportHtml() {
         function generateList(parent) {
             if (!parent) {
-                const ul = document.createElement('ul')
+                const ul = document.createElement('ol')
                 if (Model.tree.head) {
                     const li = document.createElement('li')
                         li.textContent = Model.tree.head.name
@@ -324,7 +324,7 @@ class Model {
                 return ul
             }
             else {
-                const ul = document.createElement('ul')
+                const ul = document.createElement('ol')
                 for ( let c of parent.children ) {
                     const li = document.createElement('li')
                     if (c) {
@@ -356,13 +356,13 @@ class Model {
                 meta.setAttribute("charset", "utf-8")
                 head.appendChild(meta)
 
-                const style = document.createElement("style")
-                style.textContent = `
-                    li {
-                        list-style: none;
-                    }
-                `
-                head.appendChild(style)
+                // const style = document.createElement("style")
+                // style.textContent = `
+                //     li {
+                //         list-style: none;
+                //     }
+                // `
+                // head.appendChild(style)
             html.appendChild(head)
 
             const body = document.createElement("body")
