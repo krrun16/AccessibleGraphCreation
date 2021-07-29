@@ -30,7 +30,7 @@ class View {
     }
 
     static getDesc(d) {
-        return d.tree.getNodes()
+        return d.tree.getNodesBfs()
         .map(
             node => {
                 let string = ""

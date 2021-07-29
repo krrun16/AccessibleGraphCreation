@@ -1,6 +1,6 @@
 class Tree {
     constructor() {
-        this.arity = 3
+        this.arity = 2
         this.head = null
         return this
     }
@@ -24,6 +24,20 @@ class Tree {
             }
             return nodes
         }
+    }
+
+    getNodesBfs() {
+        let r = []
+        let max = 999
+        if ( this.head ) {
+            let q = [this.head]
+            while (q.length && max--) {
+                let c = q.shift()
+                r.push(c)
+                q = q.concat( this.getChildren(c) )
+            }
+        }
+        return r
     }
 
     getNodeByName(name) {

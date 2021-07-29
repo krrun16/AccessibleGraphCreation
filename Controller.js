@@ -188,15 +188,17 @@ class Controller {
     }
 
     static upload(e) {
-        console.log("Opening file...")
-
         const reader = new FileReader()
         reader.onload = Controller.readFile
-        reader.readAsText( e.target.files[0] )
+        try {
+            reader.readAsText( e.target.files[0] )
+        }
+        catch (e) {
+            // do nothing, the user clicked "cancel" on the upload dialog
+        }
     }
 
     static readFile(e) {
-        console.log("Reading file...")
         try {
             Model.import( JSON.parse(e.target.result) )
         }
