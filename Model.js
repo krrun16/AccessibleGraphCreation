@@ -22,14 +22,21 @@ class Model {
 
     static interface = {
         current: null,
+        nextNameIndex: 0,
     }
 
     static nodeNames = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
-    
+
     static getNextName() {
-        return this.nodeNames.find(
-            name => !this.tree.getNodeByName(name)
-        )
+        const quotient = Math.floor( this.interface.nextNameIndex / this.nodeNames.length )
+        const remainder = this.interface.nextNameIndex % this.nodeNames.length
+        this.interface.nextNameIndex++
+        if ( quotient < 1 ) {
+            return this.nodeNames[remainder]
+        }
+        else {
+            return `${this.nodeNames[quotient-1]}${this.nodeNames[remainder]}`
+        }
     }
 
     static canMoveLeft() {

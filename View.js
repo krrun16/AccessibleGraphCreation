@@ -122,7 +122,7 @@ class View {
                     spinner.id = "arity"
                     spinner.type = "number"
                     spinner.min = 1
-                    spinner.max = 16
+                    spinner.max = 6
                     spinner.step = 1
                     spinner.value = d.tree.arity
                     treePropertiesContainer.appendChild(spinner)
