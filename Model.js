@@ -366,7 +366,31 @@ class Model {
             html.appendChild(head)
 
             const body = document.createElement("body")
+                const h1 = document.createElement("h1")
+                    h1.textContent = "Tree"
+                    body.appendChild(h1)
                 body.appendChild( generateList() )
+                
+                const shortLabel = document.createElement('h1')
+                shortLabel.id = "shortLabel"
+                shortLabel.textContent = "Short Description of Tree"
+                body.appendChild(shortLabel)
+
+                const short = document.createElement('p')
+                short.setAttribute("aria-labelledby", "shortLabel")
+                short.textContent = this.getTitle()
+                body.appendChild(short)
+
+                const longLabel = document.createElement('h1')
+                longLabel.id = "longLabel"
+                longLabel.textContent = "Long Description of Tree"
+                body.appendChild(longLabel)
+
+                const long = document.createElement('p')
+                long.setAttribute("aria-labelledby", "longLabel")
+                long.textContent = this.getDesc()
+                body.appendChild(long)
+
         html.appendChild(body)
 
         const serializer = new XMLSerializer()
