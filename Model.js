@@ -323,16 +323,18 @@ class Model {
                 }
                 return ul
             }
-
             else {
                 const ul = document.createElement('ul')
                 for ( let c of parent.children ) {
                     const li = document.createElement('li')
                     if (c) {
                         li.textContent = c.name
-                        li.appendChild(
-                            generateList(c)
-                        )
+                        // only generate a sublist if there is at least one child that is not undefined
+                        if ( c.children.filter( node => node ).length ) {
+                            li.appendChild(
+                                generateList(c)
+                            )
+                        }
                     }
                     else {
                         li.textContent = "no node"
