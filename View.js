@@ -14,49 +14,6 @@ class View {
         this.RightPanel.render(d)
     }
 
-    static getTitle(d) {
-        const numberOfNodes = d.view.summary.find( item => item.id === "numberOfNodes").value
-        const arity = d.view.summary.find( item => item.id === "arity").value
-        const numberOfLeafNodes = d.view.summary.find( item => item.id === "numberOfLeafNodes").value
-        const numberOfNonLeafNodes = d.view.summary.find( item => item.id === "numberOfNonLeafNodes").value
-        const treeDepth = d.view.summary.find( item => item.id === "treeDepth").value
-        
-        if (numberOfNodes === 0) {
-            return `An empty computer science tree data structure with arity ${arity} represented as a hierarchical diagram with circles for nodes and lines for edges.`
-        }
-        else {
-            return `A computer science tree data structure represented as a hierarchical diagram with circles for nodes and lines for edges. The tree has arity ${arity} and depth ${treeDepth}. There are ${numberOfNodes} nodes, ${numberOfLeafNodes} of which are leaf nodes and ${numberOfNonLeafNodes} of which are non-leaf nodes.`
-        }
-    }
-
-    static getDesc(d) {
-        return d.tree.getNodesBfs()
-        .map(
-            node => {
-                let string = ""
-                if (d.tree.head === node) {
-                    string = `Head: ${node.name}. `
-                }
-                const children = d.tree.getChildren(node)
-                let childrenString
-                if (children.length) {
-                    childrenString = d.tree.getChildren(node)
-                    .map(
-                        (child, index) => `child ${index+1} is ${child.name}`
-                    )
-                    .join(", ")
-                    string += `${node.name} has ${children.length} children: ${childrenString}.`
-                }
-                else {
-                    string += `${node.name} has no children.`
-                }
-                return string
-            }
-        )
-        .join(" ")
-    }
-
-
     static exportSvg(d) {
         const svg = document.getElementById('svg')
         const serializer = new XMLSerializer()
@@ -431,11 +388,11 @@ class View {
 
             // set alt text attributes
             let title = document.createElementNS("http://www.w3.org/2000/svg", "title")
-            title.textContent = View.getTitle(d)
+            title.textContent = d.view.title
             svg.appendChild(title)
 
             let desc = document.createElementNS("http://www.w3.org/2000/svg", "desc")
-            desc.textContent = View.getDesc(d)
+            desc.textContent = d.view.description
             svg.appendChild(desc)
 
             // render in depth-first search order because why not :) (actually it's because I really don't want to rewrite this whole breadth-first algorithm and I already have a working depth-first one, can you tell how much I love life? PS I hope you're having fun looking at my code LOL s/o from Joseph 2021-07-11)
@@ -568,7 +525,7 @@ class View {
                 alt.id = "altText"
                 alt.rows = 6
                 alt.addEventListener('click', function(e) { this.select() } )
-                alt.textContent = View.getTitle(d)
+                alt.textContent = d.view.title
                 e.appendChild(alt)
 
                 const longAltTextLabel = document.createElement("h2")
@@ -579,15 +536,15 @@ class View {
                 longAlt.id = "longAltText"
                 longAlt.rows = 6
                 longAlt.addEventListener('click', function(e) { this.select() } )
-                longAlt.textContent = View.getDesc(d)
+                longAlt.textContent = d.view.description
                 e.appendChild(longAlt)
 
             return e
         },
 
         render(d) {
-            document.getElementById("altText").textContent = View.getTitle(d)
-            document.getElementById("longAltText").textContent = View.getDesc(d)
+            document.getElementById("altText").textContent = d.view.title
+            document.getElementById("longAltText").textContent = d.view.description
         }
 
     }

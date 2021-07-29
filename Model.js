@@ -12,6 +12,8 @@ class Model {
                 numberOfChildren: this.tree.numberOfChildren(this.interface.current),
                 actions: this.getActions(),
                 summary: this.getSummary(),
+                title: this.getTitle(),
+                description: this.getDesc(),
             },
         }
     }
@@ -263,8 +265,67 @@ class Model {
         }
     }
 
+    static getTitle() {
+        const numberOfNodes = this.tree.numberOfNodes()
+        const arity = this.tree.arity
+        const numberOfLeafNodes = this.tree.numberOfLeafNodes()
+        const numberOfNonLeafNodes = this.tree.numberOfNonLeafNodes()
+        const treeDepth = this.tree.getTreeDepth()
+        
+        if (numberOfNodes === 0) {
+            return `An empty computer science tree data structure with arity ${arity} represented as a hierarchical diagram with circles for nodes and lines for edges.`
+        }
+        else {
+            return `A computer science tree data structure represented as a hierarchical diagram with circles for nodes and lines for edges. The tree has arity ${arity} and depth ${treeDepth}. There are ${numberOfNodes} nodes, ${numberOfLeafNodes} of which are leaf nodes and ${numberOfNonLeafNodes} of which are non-leaf nodes.`
+        }
+    }
+
+    static getDesc() {
+        return this.tree.getNodesBfs()
+        .map(
+            node => {
+                let string = ""
+                if (this.tree.head === node) {
+                    string = `Head: ${node.name}. `
+                }
+                const children = this.tree.getChildren(node)
+                let childrenString
+                if (children.length) {
+                    childrenString = this.tree.getChildren(node)
+                    .map(
+                        (child, index) => `child ${index+1} is ${child.name}`
+                    )
+                    .join(", ")
+                    string += `${node.name} has ${children.length} children: ${childrenString}.`
+                }
+                else {
+                    string += `${node.name} has no children.`
+                }
+                return string
+            }
+        )
+        .join(" ")
+    }
+
     static export() {
         return JSON.stringify( this.getData() )
+    }
+
+    static exportHtml() {
+        const html = document.createElement("html")
+        html.setAttribute("lang", "en")
+            const head = document.createElement("head")
+                const title = document.createElement("title")
+                title.textContent = this.getTitle()
+                head.appendChild(title)
+
+                const meta = document.createElement("meta")
+                meta.setAttribute("charset", "utf-8")
+                head.appendChild(meta)
+            html.appendChild(head)
+
+            const body = document.createElement("body")
+                
     }
 
     static import(json) {

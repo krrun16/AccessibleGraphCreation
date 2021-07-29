@@ -213,6 +213,14 @@ class Controller {
         Controller.download(data, `Tree (${new Date()}).svg`)
     }
 
+    static exportPng(e) {
+
+    }
+
+    static exportHtml(e) {
+        
+    }
+
 }
 
 window.addEventListener("load", Controller.init)
