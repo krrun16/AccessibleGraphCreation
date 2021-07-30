@@ -1,6 +1,7 @@
 class View {
 
     static init(d) {
+        this.Canvas.init(d)
         this.Edit.init(d)
         this.TreeView.init(d)
         this.Status.init(d)
@@ -70,6 +71,14 @@ class View {
             action => menu.appendChild( View.ButtonItem(action) )
         )
         return menu
+    }
+
+    static Canvas = {
+        init(d) {
+            const canvas = document.createElement('canvas')
+            canvas.id = 'canvas'
+            document.body.appendChild(canvas)
+        }
     }
 
     static Edit = {
