@@ -17,7 +17,7 @@ class Controller {
         document.getElementById("moveLastChild").addEventListener("click", Controller.moveLastChild)
         document.getElementById("moveLeft").addEventListener("click", Controller.moveLeft)
         document.getElementById("moveRight").addEventListener("click", Controller.moveRight)
-        document.getElementById('arity').addEventListener('change', Controller.changeArity)
+        document.getElementById('aritySpinner').addEventListener('change', Controller.changeArity)
         document.getElementById("save").addEventListener('click', Controller.save)
         document.getElementById('svg').addEventListener('click', Controller.selectNode)
         document.getElementById("loadDummy").addEventListener('click', Controller.load)
@@ -76,8 +76,6 @@ class Controller {
         const newArity = Number(e.target.value)
         Model.changeArity(newArity)
         View.render( Model.getData() )
-        // re-bind events for elements that needed to be replaced to reflect the new arity
-        Controller.bindArityEvents()
     }
 
     static selectNode(e) {

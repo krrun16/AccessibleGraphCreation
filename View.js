@@ -31,7 +31,7 @@ class View {
         }
     }
 
-    static ButtonItem(action) {
+    static MenubarItem(action) {
         const li = document.createElement('li')
         const button = document.createElement('button')
         button.href = "#"
@@ -39,6 +39,7 @@ class View {
         button.id = action.id
         
         const t = document.createElement("span")
+        t.className = "menubarItemName"
         t.textContent = action.textContent
         button.appendChild(t)
         
@@ -68,7 +69,7 @@ class View {
         menu.setAttribute("aria-labelledby", labeledBy)
         menu.id = menuId
         actions.map(
-            action => menu.appendChild( View.ButtonItem(action) )
+            action => menu.appendChild( View.MenubarItem(action) )
         )
         return menu
     }
@@ -87,11 +88,38 @@ class View {
             let e = document.createElement("div")
             e.classList.add("window")
             e.id = "edit"
+            
+            const editContainerLabel = document.createElement("h1")
+            editContainerLabel.textContent = "Edit and Move"
+            editContainerLabel.id = "editContainerLabel"
+            e.appendChild(editContainerLabel)
+            
+                const treePropertiesLabel = document.createElement('h2')
+                treePropertiesLabel.id = "treePropertiesLabel"
+                treePropertiesLabel.textContent = "Tree Properties"
+                treePropertiesLabel.className = "menubarLabel"
+                e.appendChild(treePropertiesLabel)
 
-                const editContainerLabel = document.createElement("h1")
-                editContainerLabel.textContent = "Edit and Move"
-                editContainerLabel.id = "editContainerLabel"
-                e.appendChild(editContainerLabel)
+                const treePropertiesContainer = document.createElement("div")
+                treePropertiesContainer.id = "treePropertiesContainer"
+
+                    const span = document.createElement('span')
+                    span.textContent = "Nodes have at most"
+                    treePropertiesContainer.appendChild(span)
+
+                    const spinner = document.createElement('input')
+                    spinner.id = "aritySpinner"
+                    spinner.type = "number"
+                    spinner.min = 1
+                    spinner.max = d.interface.maximumArity
+                    spinner.step = 1
+                    treePropertiesContainer.appendChild(spinner)
+
+                    const span2 = document.createElement('span')
+                    span2.textContent = "children"
+                    treePropertiesContainer.appendChild(span2)
+
+                e.appendChild(treePropertiesContainer)
 
                 const addLabel = document.createElement("h2")
                 addLabel.id = "addLabel"
@@ -114,46 +142,20 @@ class View {
                 e.appendChild(moveLabel)
                 e.appendChild( View.populateMenu("moveMenu", d.view.actions.move, "moveLabel") )
 
-                const treePropertiesLabel = document.createElement('h2')
-                treePropertiesLabel.id = "treePropertiesLabel"
-                treePropertiesLabel.textContent = "Tree Properties"
-                treePropertiesLabel.className = "menubarLabel"
-                e.appendChild(treePropertiesLabel)
-
-                const treePropertiesContainer = document.createElement("div")
-                treePropertiesContainer.id = "treePropertiesContainer"
-
-                    const span = document.createElement('span')
-                    span.textContent = "Nodes have at most"
-                    treePropertiesContainer.appendChild(span)
-
-                    const spinner = document.createElement('input')
-                    spinner.id = "arity"
-                    spinner.type = "number"
-                    spinner.min = 1
-                    spinner.max = d.interface.maximumArity
-                    spinner.step = 1
-                    treePropertiesContainer.appendChild(spinner)
-
-                    const span2 = document.createElement('span')
-                    span2.textContent = "children"
-                    treePropertiesContainer.appendChild(span2)
-
-                e.appendChild(treePropertiesContainer)
-
             document.body.appendChild(e)
 
             this.render(d)
         },
 
         render(d) {
-            document.getElementById('arity').value = d.tree.arity
+            // update spinner button value
+            document.getElementById('aritySpinner').value = d.tree.arity
             const actions = d.view.actions.add
             .concat(d.view.actions.edit)
             .concat(d.view.actions.move)
             for (let a of actions) {
                 const t = document.getElementById(a.id)
-                t.textContent = a.textContent
+                t.getElementsByClassName("menubarItemName")[0].textContent = a.textContent
                 if (a.isEnabled) {
                     t.classList.remove("disabled")
                     t.removeAttribute("disabled")

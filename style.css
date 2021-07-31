@@ -132,7 +132,7 @@ ol li {
     position: relative;
 }
 
-    ol li:last-child::after {
+    ol li:last-child::after, #treePropertiesContainer::after {
         position: absolute;
         content: "";
         bottom: -4px;
@@ -212,6 +212,8 @@ textarea, input {
     #treePropertiesContainer {
         padding-left: 30px;
         font-weight: 500;
+        position: relative;
+        padding-bottom: 5px;
     }
 
     #treePropertiesContainer > input {

@@ -204,7 +204,6 @@ class Model {
                 node.children = node.children.slice(0, arity)
             }
         )
-        console.log( this.tree.getNodes() )
     }
 
     static move(d) {
@@ -245,6 +244,7 @@ class Model {
     }
     
     static addNodeNthChild(n) {
+        console.log(this.interface.current.children[n]?.name)
         this.tree.addNode(this.interface.current, this.getNextName(), n)
     }
     
