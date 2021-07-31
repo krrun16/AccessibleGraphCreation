@@ -18,12 +18,14 @@ class Model {
         }
     }
 
-    static tree = new Tree()
-
     static interface = {
         current: null,
         nextNameIndex: 0,
+        maximumArity: 6,
+        defaultArity: 2,
     }
+
+    static tree = new Tree(this.interface.defaultArity)
 
     static nodeNames = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
 
@@ -72,7 +74,7 @@ class Model {
     }
 
     static canAddChild(index) {
-        return Boolean( this.interface.current && !this.interface.current.children[index] )
+        return Boolean( this.interface.current && !this.interface.current.children[index] && index<this.tree.arity)
     }
 
     static getSummary() {
@@ -112,12 +114,13 @@ class Model {
 
     static getActions() {
         class Action {
-            constructor(id, textContent, isEnabled, shortcut) {
+            constructor(id, textContent, isEnabled, shortcut, isVisible=true) {
                 this.id = id
                 this.textContent = textContent
                 this.isEnabled = isEnabled
                 this.shortcut = shortcut
                 this.shortcutName = Action.translateShortcut(shortcut)
+                this.isVisible = isVisible
             }
             static translateShortcut(shortcut) {
                 if (shortcut) {
@@ -140,22 +143,24 @@ class Model {
             new Action("asHead", "Head to Tree", !!!this.tree.head, {shiftKey: true, code: "KeyH"}),
         ]
 
-        if (this.tree.arity===2) {
-            add = add.concat(
-                [
-                    new Action("asLeft", `Left Child`, this.canAddLeftChild(), {shiftKey: true, code: "Digit1"}),
-                    new Action("asRight", `Right Child`, this.canAddRightChild(),{shiftKey: true, code: "Digit2"}),
-                ]
-            )
-        }
-        else if (this.tree.arity === 1 || this.tree.arity > 2) {
-            for (let i=0; i<this.tree.arity; i++) {
+        if (this.tree.arity > 0 && this.tree.arity<this.interface.maximumArity) {
+            for (let i=0; i<this.interface.maximumArity; i++) {
+                let label = `As ${Model.numberSuffix(i+1)} Child`
+                if (this.tree.arity === 2) {
+                    if (i===0) {
+                        label = "As Left Child"
+                    }
+                    else if (i===1) {
+                        label = "As Right Child"
+                    }
+                }
                 add.push(
                     new Action(
                         `as${Model.numberSuffix(i)}`,
-                        `As ${Model.numberSuffix(i+1)} Child`,
+                        label,
                         this.canAddChild(i),
-                        {shiftKey: true, code: `Digit${i+1}`}
+                        {shiftKey: true, code: `Digit${i+1}`},
+                        i < this.tree.arity ? true : false,
                     )
                 )
             }
@@ -192,6 +197,14 @@ class Model {
     static changeArity(arity) {
         // before we start, cry
         this.tree.arity = arity
+        // filter all nodes in the tree, pruning any children at indices greater than the arity
+        const nodes = this.tree.getNodes()
+        nodes.map(
+            node => {
+                node.children = node.children.slice(0, arity)
+            }
+        )
+        console.log( this.tree.getNodes() )
     }
 
     static move(d) {
@@ -436,7 +449,7 @@ class Model {
             // delete the current tree
             delete this.tree
             // rebuild the tree
-            this.tree = new Tree()
+            this.tree = new Tree(json.tree.arity)
             buildTree(json.tree.head, null, null)       
             
             // set the cursor

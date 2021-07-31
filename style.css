@@ -107,6 +107,10 @@ ol li:not(:last-child) {
         color: gray;
     }
 
+    .menubarItem.hidden {
+        display: none;
+    }
+
     .menubarItem:not(.disabled):hover {
         border: solid rgb(16, 80, 143) 1px;
         border-left: none;

@@ -8,8 +8,8 @@ class Controller {
     }
 
     static bindEvents(e) {
-        document.getElementById("asHead").addEventListener("click", Controller.addNodeHead)
         Controller.bindArityEvents(e)
+        document.getElementById("asHead").addEventListener("click", Controller.addNodeHead)
         document.getElementById("removeNode").addEventListener("click", Controller.removeNode)
         document.getElementById("renameNode").addEventListener("click", Controller.renameNode)
         document.getElementById("moveUp").addEventListener("click", Controller.moveUp)
@@ -55,17 +55,11 @@ class Controller {
 
     static bindArityEvents(e) {
         const d = Model.getData()
-        if ( d.tree.arity === 2 ) {
-            document.getElementById("asLeft").addEventListener("click", Controller.addNodeLeftChild)
-            document.getElementById("asRight").addEventListener("click", Controller.addNodeRightChild)
-        }
-        else {
-            for (let i=0; i<d.tree.arity; i++) {
-                document.getElementById(`as${Model.numberSuffix(i)}`).addEventListener(
-                    "click",
-                    Controller.addNodeNthChild(i)
-                )
-            }
+        for (let i=0; i<d.interface.maximumArity; i++) {
+            document.getElementById(`as${Model.numberSuffix(i)}`).addEventListener(
+                "click",
+                Controller.addNodeNthChild(i)
+            )
         }
     }
 
@@ -82,6 +76,8 @@ class Controller {
         const newArity = Number(e.target.value)
         Model.changeArity(newArity)
         View.render( Model.getData() )
+        // re-bind events for elements that needed to be replaced to reflect the new arity
+        Controller.bindArityEvents()
     }
 
     static selectNode(e) {

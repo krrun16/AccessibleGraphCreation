@@ -1,6 +1,6 @@
 class Tree {
-    constructor() {
-        this.arity = 3
+    constructor(arity) {
+        this.arity = arity
         this.head = null
         return this
     }
@@ -298,6 +298,7 @@ class Tree {
     addNode(parent, name, position) {
         // check if there is already a node at this position
         if ( parent && parent.children[position] ) {
+            console.log(parent, name, position, parent.children[position])
             throw new Error("Cannot add new node in a non-empty position")
         }
         else {

@@ -131,9 +131,8 @@ class View {
                     spinner.id = "arity"
                     spinner.type = "number"
                     spinner.min = 1
-                    spinner.max = 6
+                    spinner.max = d.interface.maximumArity
                     spinner.step = 1
-                    spinner.value = d.tree.arity
                     treePropertiesContainer.appendChild(spinner)
 
                     const span2 = document.createElement('span')
@@ -148,11 +147,13 @@ class View {
         },
 
         render(d) {
+            document.getElementById('arity').value = d.tree.arity
             const actions = d.view.actions.add
             .concat(d.view.actions.edit)
             .concat(d.view.actions.move)
             for (let a of actions) {
                 const t = document.getElementById(a.id)
+                t.textContent = a.textContent
                 if (a.isEnabled) {
                     t.classList.remove("disabled")
                     t.removeAttribute("disabled")
@@ -160,6 +161,12 @@ class View {
                 else {
                     t.classList.add("disabled")
                     t.setAttribute("disabled", "true")
+                }
+                if (a.isVisible) {
+                    t.classList.remove('hidden')
+                }
+                else {
+                    t.classList.add('hidden')
                 }
             }
         }
