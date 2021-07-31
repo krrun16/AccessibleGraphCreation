@@ -397,7 +397,7 @@ class View {
 
             // set alt text attributes
             let title = document.createElementNS("http://www.w3.org/2000/svg", "title")
-            title.textContent = d.view.title
+            title.textContent = `${d.view.title} ${d.view.description}`
             svg.appendChild(title)
 
             let desc = document.createElementNS("http://www.w3.org/2000/svg", "desc")
@@ -534,26 +534,24 @@ class View {
                 alt.id = "altText"
                 alt.rows = 6
                 alt.addEventListener('click', function(e) { this.select() } )
-                alt.textContent = d.view.title
                 e.appendChild(alt)
 
-                const longAltTextLabel = document.createElement("h2")
-                longAltTextLabel.textContent = "Extended Alt Text"
-                longAltTextLabel.className = "menubarLabel"
-                e.appendChild(longAltTextLabel)
-                const longAlt = document.createElement("textarea")
-                longAlt.id = "longAltText"
-                longAlt.rows = 6
-                longAlt.addEventListener('click', function(e) { this.select() } )
-                longAlt.textContent = d.view.description
-                e.appendChild(longAlt)
+                // const longAltTextLabel = document.createElement("h2")
+                // longAltTextLabel.textContent = "Extended Alt Text"
+                // longAltTextLabel.className = "menubarLabel"
+                // e.appendChild(longAltTextLabel)
+                // const longAlt = document.createElement("textarea")
+                // longAlt.id = "longAltText"
+                // longAlt.rows = 6
+                // longAlt.addEventListener('click', function(e) { this.select() } )
+                // longAlt.textContent = d.view.description
+                // e.appendChild(longAlt)
 
             return e
         },
 
         render(d) {
-            document.getElementById("altText").textContent = d.view.title
-            document.getElementById("longAltText").textContent = d.view.description
+            document.getElementById("altText").textContent = `${d.view.title} ${d.view.description}`
         }
 
     }
@@ -566,6 +564,8 @@ class View {
             e.appendChild( View.Summary.init(d) )
             e.appendChild( View.File.init(d) )
             document.body.appendChild(e)
+            View.Summary.render(d)
+            View.File.render(d)
         },
 
         render(d) {

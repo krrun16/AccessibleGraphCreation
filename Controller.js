@@ -234,14 +234,13 @@ class Controller {
         const img = new Image()
         img.src = url
         img.onload = function() {
-            console.log('ready')
             c.drawImage(img, 0, 0)
     
             const file =  canvas
                 .toDataURL('image/png')
                 .replace('img/png', 'image/octet-stream')
     
-            Controller.download(file)
+            Controller.download(file, `Tree (${new Date()}).png`)
         }
 
     }
