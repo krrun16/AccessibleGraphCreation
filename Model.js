@@ -143,8 +143,8 @@ class Model {
             new Action("asHead", "Head to Tree", !!!this.tree.head, {shiftKey: true, code: "KeyH"}),
         ]
 
-        if (this.tree.arity > 0 && this.tree.arity<this.interface.maximumArity) {
-            for (let i=0; i<this.interface.maximumArity; i++) {
+        if (this.tree.arity > 0 && this.tree.arity<=this.interface.maximumArity) {
+            for (let i=0; i<=this.interface.maximumArity; i++) {
                 let label = `As ${Model.numberSuffix(i+1)} Child`
                 if (this.tree.arity === 2) {
                     if (i===0) {
