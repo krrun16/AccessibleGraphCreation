@@ -98,8 +98,8 @@ class Tree {
             return null
         }
         else {
-            let nodes = this.getNodes()
-            let result = nodes.filter(
+            const nodes = this.getNodes()
+            const result = nodes.filter(
                 node => this.getChildren(node).includes(n)
             )
             if (result.length === 1) {

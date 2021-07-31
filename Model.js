@@ -198,7 +198,13 @@ class Model {
         // before we start, cry
         this.tree.arity = arity
         // filter all nodes in the tree, pruning any children at indices greater than the arity
-        const nodes = this.tree.getNodes()
+        const nodes = this.tree.getNodesBfs()
+        // move the cursor to a save position before removing any nodes
+        let max = 999
+        while ( this.tree.getNodeIndexIncludeBlanks(this.interface.current) >= arity && max--) {
+            this.interface.current = this.tree.getParent(this.interface.current)
+        }
+        // prune children
         nodes.map(
             node => {
                 node.children = node.children.slice(0, arity)
@@ -244,7 +250,6 @@ class Model {
     }
     
     static addNodeNthChild(n) {
-        console.log(this.interface.current.children[n]?.name)
         this.tree.addNode(this.interface.current, this.getNextName(), n)
     }
     
