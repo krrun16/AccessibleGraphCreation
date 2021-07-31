@@ -220,9 +220,10 @@ class Controller {
         const svg = document.getElementById('svg')
         const canvas = document.getElementById('canvas')
         const b = svg.getBoundingClientRect()
-        const ratio = b.width/b.height
-        canvas.width = Math.ceil( b.width )
-        canvas.height = Math.ceil( b.height )
+        const minimumSize = 1920
+        const scaleFactor = minimumSize / Math.min(b.width, b.height)
+        canvas.width = Math.ceil( b.width * scaleFactor )
+        canvas.height = Math.ceil( b.height * scaleFactor )
         const c = canvas.getContext('2d')
         
         const serializer = new XMLSerializer()
