@@ -20,12 +20,68 @@ class Controller {
         document.getElementById('aritySpinner').addEventListener('change', Controller.changeArity)
         document.getElementById("save").addEventListener('click', Controller.save)
         document.getElementById('svg').addEventListener('click', Controller.selectNode)
+        // document.getElementById('svg').addEventListener('mousedown', Controller.startPanning)
+        // document.getElementById('svg').addEventListener('mouseup', Controller.stopPanning)
+        // document.getElementById('svg').addEventListener('mousemove', Controller.svgMouseMove)
+        // document.getElementById('svg').addEventListener('mousewheel', Controller.svgZoom)
         document.getElementById("loadDummy").addEventListener('click', Controller.load)
         document.getElementById("load").addEventListener('change', Controller.upload)
         document.getElementById("exportSvg").addEventListener('click', Controller.exportSvg)
         document.getElementById("exportPng").addEventListener('click', Controller.exportPng)
         document.getElementById("exportHtml").addEventListener('click', Controller.exportHtml)
         document.body.addEventListener('keydown', Controller.keydown)
+    }
+
+    static svgZoom(e) {
+        Model.zoom(
+            {
+                x: e.offsetX,
+                y: e.offsetY
+            },
+            Math.sign(e.deltaY)
+        )
+        console.log(Model.interface.zoomDelta)
+        View.render( Model.getData() )
+        Model.stopZooming()
+        e.preventDefault()
+    }
+
+    static startPanning(e) {
+        const [vx, vy, vw, vh] = svg.getAttribute('viewBox').split(' ').map(
+            coord => Number(coord)
+            )
+            Model.startPanning(
+                {
+                    x: e.clientX,
+                    y: e.clientY,
+                },
+                {
+                    x: vx,
+                    y: vy,
+                    w: vw,
+                    h: vh,
+                }
+                )
+        e.preventDefault()
+    }
+
+    static stopPanning(e) {
+        Model.stopPanning()
+        e.preventDefault()
+    }
+
+    static svgMouseMove(e) {
+        const d = Model.getData()
+        if (d.interface.isPanning) {
+            Model.setMoveCoordinates(
+                {
+                    x: e.clientX,
+                    y: e.clientY,
+                }
+            )
+            View.TreeView.render(d)
+        }
+        e.preventDefault()
     }
 
     static keydown(e) {

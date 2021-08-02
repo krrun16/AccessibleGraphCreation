@@ -191,6 +191,59 @@ class View {
 
         render(d) {
 
+            if (d.interface.isPanning) {
+
+                // we are panning, so skip rendering the tree
+
+                const svg = document.getElementById('svg')
+                // get the actual element size
+                const s = svg.getBoundingClientRect()
+                // get the viewBox
+                const v = d.interface.viewBoxCoordinates
+                // get the coordinates when the pan started
+                const p = d.interface.panningStartCoordinates
+                // get the current coordinates
+                const c = d.interface.coordinates
+
+                // calculate deltas
+                const [dx, dy] = [
+                    (p.x-c.x),
+                    (p.y-c.y),
+                ]
+
+                // apply deltas to the viewbox
+                svg.setAttribute(
+                    'viewBox',
+                    `${v.x+dx} ${v.x+dy} ${v.w} ${v.h}`
+                )
+                return
+            }
+
+            // code adapted from https://stackoverflow.com/questions/52576376/how-to-zoom-in-on-a-complex-svg-structure
+            if (d.interface.zoomDelta) {
+                const svg = document.getElementById('svg')
+                const s = svg.getBoundingClientRect()
+
+                // get the mouse coordinates
+                const c = d.interface.coordinates
+                const zoomFactor = 0.1
+                // get the viewBox
+                const [vx, vy, vw, vh] = svg.getAttribute('viewBox').split(' ').map(
+                    coord => Number(coord)
+                )
+                // calculate deltas
+                const dw = vw * d.interface.zoomDelta * zoomFactor
+                const dh = vh * d.interface.zoomDelta * zoomFactor
+                const dx = dw*c.x/s.width
+                const dy = dh*c.y/s.height
+
+                svg.setAttribute(
+                    'viewBox',
+                    `${vx+dx} ${vx+dy} ${vw-dw} ${vh-dh}`
+                )
+                return
+            }
+
             // set constants
             const diameter = 10
             // minimum margin

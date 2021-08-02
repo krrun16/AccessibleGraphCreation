@@ -23,11 +23,38 @@ class Model {
         nextNameIndex: 0,
         maximumArity: 6,
         defaultArity: 2,
+        isPanning: false,
+        panningStartCoordinates: {x: 0, y: 0},
+        coordinates: {x: 0, y: 0},
+        zoomDelta: 0,
     }
 
     static tree = new Tree(this.interface.defaultArity)
 
     static nodeNames = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
+
+    static zoom(coordinates, direction) {
+        this.interface.coordinates = coordinates
+        this.interface.zoomDelta = -direction
+    }
+
+    static stopZooming() {
+        this.interface.zoomDelta = 0
+    }
+
+    static startPanning(panningStartCoordinates, viewBoxCoordinates) {
+        this.interface.isPanning = true
+        this.interface.panningStartCoordinates = panningStartCoordinates
+        this.interface.viewBoxCoordinates = viewBoxCoordinates
+    }
+
+    static stopPanning() {
+        this.interface.isPanning = false
+    }
+
+    static setMoveCoordinates(coordinates) {
+        this.interface.coordinates = coordinates
+    }
 
     static getNextName() {
         const quotient = Math.floor( this.interface.nextNameIndex / this.nodeNames.length )
@@ -449,14 +476,15 @@ class Model {
 
         // check if there is a tree in this file
         if ( json.tree.head ) {
-            // load interface settings
-    
+            
             // delete the current tree
             delete this.tree
             // rebuild the tree
             this.tree = new Tree(json.tree.arity)
             buildTree(json.tree.head, null, null)       
             
+            // load interface settings
+            this.interface = json.interface
             // set the cursor
             this.interface.current = this.tree.getNodeByName(json.interface.current.name)
         }

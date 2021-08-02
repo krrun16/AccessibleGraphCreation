@@ -326,6 +326,7 @@ textarea, input {
     cursor: grab;
     user-select: none;
     margin-top: auto;
+    /* height: 100%; */
 }
 
     .node {
