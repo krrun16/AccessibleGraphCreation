@@ -228,6 +228,7 @@ textarea, input {
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 
     /* #treeContainer::after {
